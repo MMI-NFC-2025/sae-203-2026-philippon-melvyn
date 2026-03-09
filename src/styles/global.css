@@ -1,1 +1,113 @@
 @import "tailwindcss";
+
+
+@theme {
+    /* Polices */
+    --font-sans: "Inter Variable", sans-serif;
+    --font-serif: "Playfair Display Variable", serif;
+
+    /* Couleurs principales */
+    --color-blue-300: #A9CEFF;
+    --color-blue-500: #3A8CE9;
+
+    --color-orange-300: #F6BE8A;
+    --color-coral-400: #E97A6A;
+
+    /* Couleurs utilitaires */
+    --color-background: #f8fbff;
+    --color-surface: #ffffff;
+    --color-text: #142033;
+    --color-text-muted: #5f6f86;
+    --color-border: #d9e6f7;
+
+    /* Radius */
+    --radius-sm: 0.5rem;
+    --radius-md: 0.875rem;
+    --radius-lg: 1.25rem;
+}
+
+
+@layer base {
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply font-sans text-text bg-background leading-relaxed antialiased;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-serif text-text leading-tight;
+    }
+
+    h1 {
+        @apply text-4xl md:text-5xl lg:text-6xl;
+    }
+
+    h2 {
+        @apply text-3xl md:text-4xl;
+    }
+
+    h3 {
+        @apply text-2xl md:text-3xl;
+    }
+
+    h4 {
+        @apply text-xl md:text-2xl;
+    }
+
+    p {
+        @apply text-text-muted mb-4;
+    }
+
+    a {
+        @apply text-blue-500 underline-offset-4 transition;
+    }
+
+    a:hover {
+        @apply text-coral-400 underline;
+    }
+
+    img {
+        @apply max-w-full h-auto block;
+    }
+
+    ul {
+        @apply list-disc pl-5;
+    }
+
+    ol {
+        @apply list-decimal pl-5;
+    }
+
+    button {
+        @apply cursor-pointer;
+    }
+
+    input,
+    textarea,
+    select {
+        @apply border border-border rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500;
+    }
+
+}
+
+@layer components {
+    .grille {
+        @apply px-6 lg:grid lg:grid-cols-(--my-grid) lg:justify-center lg:gap-12;
+    }
+
+    header.bg-white #menu-btn[aria-expanded="false"]>span {
+        @apply !bg-black;
+    }
+
+    header:not(.bg-white) button[aria-label="Recherche"]>svg>* {
+        @apply max-lg:stroke-white;
+    }
+}

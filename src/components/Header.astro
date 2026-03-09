@@ -1,0 +1,113 @@
+---
+import Logo from "../assets/icones/logo.svg";
+---
+
+<header
+    id="header"
+    class="fixed top-0 left-0 z-50 w-full border-b-2 border-border bg-white transition-all duration-300 ease-in-out"
+>
+    <div
+        class="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-3 sm:px-6 lg:max-w-7xl lg:py-0"
+    >
+        <div class="flex items-center">
+            <a href="/" aria-label="Accueil" class="flex items-center">
+                <Logo class="h-12 w-auto lg:h-16" />
+            </a>
+        </div>
+
+        <div class="flex items-center">
+            <button
+                id="menu-btn"
+                aria-label="Menu"
+                aria-controls="menu"
+                aria-expanded="false"
+                class="group relative z-60 flex h-10 w-10 flex-col items-center justify-center gap-1.5 lg:hidden"
+            >
+                <span
+                    class="block h-0.5 w-7 bg-black transition-all duration-300 ease-in-out group-aria-expanded:translate-y-2 group-aria-expanded:rotate-45"
+                ></span>
+                <span
+                    class="block h-0.5 w-7 bg-black transition-all duration-300 ease-in-out group-aria-expanded:opacity-0"
+                ></span>
+                <span
+                    class="block h-0.5 w-7 bg-black transition-all duration-300 ease-in-out group-aria-expanded:-translate-y-2 group-aria-expanded:-rotate-45"
+                ></span>
+            </button>
+
+            <nav
+                id="menu"
+                aria-hidden="true"
+                class="invisible fixed inset-0 z-50 flex min-h-screen w-full items-center justify-center bg-white opacity-0 transition-all duration-300 ease-in-out lg:visible lg:static lg:z-auto lg:min-h-0 lg:w-auto lg:bg-transparent lg:opacity-100"
+            >
+                <ul
+                    class="flex list-none flex-col items-center gap-8 p-0 text-2xl font-medium lg:flex-row lg:items-stretch lg:gap-1 lg:text-sm"
+                >
+                    <li>
+                        <a
+                            href="/festival"
+                            class="block px-4 py-2 no-underline text-black transition hover:text-blue-500 lg:flex lg:h-full lg:items-center lg:px-3 lg:py-8"
+                        >
+                            Le festival
+                        </a>
+                    </li>
+
+                    <li>
+                        <a
+                            href="/programme"
+                            class="block px-4 py-2 no-underline text-black transition hover:text-blue-500 lg:flex lg:h-full lg:items-center lg:px-3 lg:py-8"
+                        >
+                            Programme
+                        </a>
+                    </li>
+
+                    <li>
+                        <a
+                            href="/artistes"
+                            class="block px-4 py-2 no-underline text-black transition hover:text-blue-500 lg:flex lg:h-full lg:items-center lg:px-3 lg:py-8"
+                        >
+                            Artistes
+                        </a>
+                    </li>
+
+                    <li>
+                        <a
+                            href="/scenes"
+                            class="block px-4 py-2 no-underline text-black transition hover:text-blue-500 lg:flex lg:h-full lg:items-center lg:px-3 lg:py-8"
+                        >
+                            Scènes
+                        </a>
+                    </li>
+
+                    <li>
+                        <a
+                            href="/infos-pratiques"
+                            class="block px-4 py-2 no-underline text-black transition hover:text-blue-500 lg:flex lg:h-full lg:items-center lg:px-3 lg:py-8"
+                        >
+                            Infos pratiques
+                        </a>
+                    </li>
+
+                    <li>
+                        <a
+                            href="/contact"
+                            class="block px-4 py-2 no-underline text-black transition hover:text-blue-500 lg:flex lg:h-full lg:items-center lg:px-3 lg:py-8"
+                        >
+                            Contact
+                        </a>
+                    </li>
+
+                    <li class="mt-2 lg:mt-0 lg:ml-4">
+                        <a
+                            href="/inscription"
+                            class="block bg-blue-500 px-6 py-3 text-center no-underline text-white transition hover:bg-coral-400 lg:flex lg:h-full lg:items-center lg:px-7 lg:py-0"
+                        >
+                            Inscription
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<script src="../js/header.js"></script>

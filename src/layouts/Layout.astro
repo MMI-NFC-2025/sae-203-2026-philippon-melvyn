@@ -1,20 +1,56 @@
 ---
-import '../styles/global.css';
+import "../styles/global.css";
+
+import "@fontsource-variable/inter";
+import "@fontsource-variable/playfair-display";
+
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const {
+	title = "Les rives du territoire",
+	description = "Festival de musique du 20 au 23 décembre 2026 à Belfort.",
+} = Astro.props;
+
+const siteName = "Les rives du territoire";
+const titleHead =
+	Astro.url.pathname === "/" ? siteName : `${title} — ${siteName}`;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+		<title>{titleHead}</title>
+		<meta name="description" content={description} />
+		<meta name="generator" content={Astro.generator} />
+
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<link
+			rel="apple-touch-icon"
+			sizes="180x180"
+			href="/apple-touch-icon.png"
+		/>
+		<link rel="manifest" href="/site.webmanifest" />
+
+		<meta name="theme-color" content="#3A8CE9" />
 	</head>
+
 	<body>
-		<slot />
+		<Header />
+
+		<main>
+			<slot />
+		</main>
+
+		<Footer />
 	</body>
 </html>
-
-
