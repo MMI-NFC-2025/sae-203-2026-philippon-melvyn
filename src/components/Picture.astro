@@ -1,0 +1,16 @@
+---
+import { Picture as AstroPicture } from "astro:assets";
+
+const { src, alt } = Astro.props;
+---
+
+<AstroPicture
+    src={src}
+    alt={alt}
+    layout="full-width"
+    formats={["avif", "webp"]}
+    pictureAttributes={{
+        class: "absolute inset-0 h-full w-full",
+    }}
+    class="h-full w-full object-cover object-[50%_20%]"
+/>

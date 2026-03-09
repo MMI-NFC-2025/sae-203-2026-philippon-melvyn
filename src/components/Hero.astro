@@ -1,0 +1,40 @@
+---
+const { title, subTitle } = Astro.props;
+---
+
+<section class="relative overflow-hidden">
+    <div class="absolute inset-0">
+        <slot name="image" />
+        <div class="absolute inset-0 bg-black/30"></div>
+    </div>
+
+    <div class="relative mx-auto w-full max-w-7xl px-6 pt-24 lg:pt-28">
+        <div class="grid min-h-[80vh] items-end lg:grid-cols-12">
+            <div class="relative z-10 pb-10 text-white lg:col-span-8">
+                <div class="mb-8 lg:mb-12">
+                    <slot name="cta" />
+                </div>
+
+                {
+                    subTitle && (
+                        <p class="mb-4 text-sm uppercase tracking-[0.25em] text-white/80">
+                            {subTitle}
+                        </p>
+                    )
+                }
+
+                <h1 class="max-w-3xl text-white drop-shadow-lg">
+                    {title}
+                </h1>
+            </div>
+
+            <div class="relative z-20 mt-6 lg:col-span-4 lg:mt-0 lg:pt-2">
+                <div
+                    class="ml-auto bg-white p-8 shadow-2xl lg:min-h-[72vh] lg:p-10"
+                >
+                    <slot name="chapo" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

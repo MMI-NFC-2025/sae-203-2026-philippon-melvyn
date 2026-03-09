@@ -1,8 +1,26 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import PictureHero from "../components/Picture.astro";
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
+import imgHero from "../assets/img/hero_apropos2.avif";
+import Button from "../components/Button.astro";
 
-
+const title = "Festival Les Rives du Territoire";
+const subTitle = "Festival de musique du 20 au 23 décembre 2026 à Belfort";
+const description =
+	"Les Rives du Territoire est un festival de musique organisé à Belfort du 20 au 23 décembre 2026 avec des artistes sur plusieurs scènes.";
 ---
 
-<Layout>
+<Layout title={title} description={description}>
+	<Hero title={title} subTitle={subTitle}>
+		
+		<Button
+			slot="cta"
+			href="/billeterie"
+			text="Réserver mes places"
+			variant="primary"
+		/>
+
+		<PictureHero slot="image" src={imgHero} alt="Violoncelles" />
+	</Hero>
 </Layout>

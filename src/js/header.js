@@ -32,7 +32,7 @@ function initHeaderScroll() {
         const currentScrollY = window.scrollY;
         const isPastOffset = currentScrollY > offset;
 
-        navBar.classList.toggle("bg-white", isPastOffset);
+        
         navBar.classList.toggle(
             "-translate-y-full",
             currentScrollY > lastScrollY && isPastOffset

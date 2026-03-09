@@ -1,0 +1,23 @@
+---
+const { href, text, variant = "primary", classes = "" } = Astro.props;
+
+const variantClass = {
+    primary: "bg-blue-500 text-white hover:bg-coral-400",
+
+    outline:
+        "border-2 border-blue-500 text-blue-500 hover:bg-coral-400 hover:text-white",
+
+    light: "bg-white text-blue-500 hover:bg-coral-400 hover:text-white",
+};
+---
+
+<a
+    href={href}
+    class:list={[
+        "inline-flex items-center justify-center rounded-full px-8 py-4 text-base font-semibold no-underline transition-all duration-300 ease-in-out lg:px-10 lg:py-5 lg:text-lg",
+        variantClass[variant],
+        classes,
+    ]}
+>
+    {text}
+</a>

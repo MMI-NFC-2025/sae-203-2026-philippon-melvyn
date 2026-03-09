@@ -1,0 +1,24 @@
+---
+import PictureHero from "../components/Picture.astro";
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
+import imgHero from "../assets/img/hero_apropos2.avif";
+
+const seotitle = "Infos pratiques | Festival Les Rives du Territoire";
+const pagetitle = "Infos pratiques";
+const subTitle = "Préparez votre venue au festival";
+const description =
+    "Retrouvez toutes les informations pratiques pour assister au festival Les Rives du Territoire à Belfort : accès, transport, hébergements, tarifs et conseils pour profiter de l'événement.";
+---
+
+<Layout title={seotitle} description={description}>
+    <Hero title={pagetitle} subTitle={subTitle}>
+        <PictureHero
+            slot="image"
+            src={imgHero}
+            alt="Violoncelles"
+            layout="full-width"
+            pictureAttributes={{ class: "absolute inset-0 object-cover" }}
+        />
+    </Hero>
+</Layout>
