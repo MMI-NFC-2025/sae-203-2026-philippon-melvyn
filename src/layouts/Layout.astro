@@ -44,13 +44,17 @@ const titleHead =
 		<meta name="theme-color" content="#3A8CE9" />
 	</head>
 
-	<body>
-		<Header />
 
-		<main>
-			<slot />
-		</main>
+		<body
+			class="min-h-screen flex flex-col bg-background text-text font-sans"
+		>
+			<Header />
 
-		<Footer />
+			<main id="main-content" class="flex-1 pt-24 lg:pt-28">
+				<slot />
+			</main>
+
+			<Footer />
+		</body>
 	</body>
 </html>
