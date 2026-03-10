@@ -1,0 +1,291 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import {
+    getArtisteById,
+    getArtistesAlphabetique,
+    pb,
+} from "../../js/backend.mjs";
+
+const { id } = Astro.params;
+
+const artiste = await getArtisteById(id);
+const allArtistes = await getArtistesAlphabetique();
+
+if (!artiste) {
+    return Astro.redirect("/artistes");
+}
+
+const pageTitle = artiste.nom;
+const seoTitle = `${artiste.nom} | Artistes | Les Rives du Territoire`;
+const description =
+    artiste.description ||
+    `Découvrez ${artiste.nom}, artiste programmé au festival Les Rives du Territoire.`;
+
+const photoUrl = artiste.photo ? pb.files.getURL(artiste, artiste.photo) : null;
+
+const galerieUrls = Array.isArray(artiste.galerie)
+    ? artiste.galerie.map((file) => ({
+          src: pb.files.getURL(artiste, file),
+          alt: `${artiste.nom} - galerie`,
+      }))
+    : [];
+
+const dateObj = artiste.date_de_presentation
+    ? new Date(artiste.date_de_presentation)
+    : null;
+
+const dateLabel = dateObj
+    ? dateObj.toLocaleDateString("fr-FR", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+      })
+    : "";
+
+const hourLabel = dateObj
+    ? dateObj.toLocaleTimeString("fr-FR", {
+          hour: "2-digit",
+          minute: "2-digit",
+      })
+    : "";
+
+const genres = Array.isArray(artiste.genre_musical)
+    ? artiste.genre_musical
+    : artiste.genre_musical
+      ? [artiste.genre_musical]
+      : [];
+
+const sceneName = artiste.expand?.production?.nom || "Scène non renseignée";
+
+const similarArtistes = allArtistes
+    .filter((item) => item.id !== artiste.id)
+    .filter((item) => {
+        const itemGenres = Array.isArray(item.genre_musical)
+            ? item.genre_musical
+            : item.genre_musical
+              ? [item.genre_musical]
+              : [];
+
+        return itemGenres.some((genre) => genres.includes(genre));
+    })
+    .slice(0, 3);
+---
+
+<Layout title={seoTitle} description={description}>
+    <section class="bg-white pb-16 lg:pb-24">
+        <div class="relative">
+            <div class="h-[42vh] w-full lg:h-[62vh]">
+                {
+                    photoUrl ? (
+                        <img
+                            src={photoUrl}
+                            alt={artiste.nom}
+                            class="h-full w-full object-cover"
+                        />
+                    ) : (
+                        <div class="h-full w-full bg-blue-300/30" />
+                    )
+                }
+            </div>
+
+            <div
+                class="absolute inset-0 bg-linear-to-t from-black/45 via-black/10 to-transparent"
+            >
+            </div>
+        </div>
+
+        <div class="grille">
+            <div
+                class="col-span-4 -mt-16 lg:col-span-10 lg:col-start-2 lg:-mt-28"
+            >
+                <div
+                    class="rounded-4xl border border-blue-300/20 bg-blue-300/80 p-6 shadow-xl backdrop-blur-md lg:p-8"
+                >
+                    <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+                        <div class="lg:col-span-8">
+                            <h1 class="text-white">{pageTitle}</h1>
+
+                            <div class="mt-5 flex flex-wrap gap-3">
+                                {
+                                    dateLabel && (
+                                        <span class="rounded-full bg-white/70 px-4 py-2 text-sm font-semibold text-text">
+                                            {dateLabel}
+                                        </span>
+                                    )
+                                }
+
+                                {
+                                    hourLabel && (
+                                        <span class="rounded-full bg-white/70 px-4 py-2 text-sm font-semibold text-text">
+                                            {hourLabel}
+                                        </span>
+                                    )
+                                }
+                            </div>
+
+                            <div class="mt-5">
+                                <p class="font-semibold text-white">
+                                    {sceneName}
+                                </p>
+                            </div>
+
+                            {
+                                genres.length > 0 && (
+                                    <div class="mt-5 flex flex-wrap gap-2">
+                                        {genres.map((genre) => (
+                                            <span class="rounded-full bg-white/60 px-3 py-1 text-sm text-text">
+                                                {genre}
+                                            </span>
+                                        ))}
+                                    </div>
+                                )
+                            }
+
+                            <div class="mt-6 max-w-3xl">
+                                <p class="text-white/95">
+                                    {artiste.description}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="mt-8 lg:col-span-4 lg:mt-0">
+                            <div class="grid grid-cols-3 gap-3">
+                                <div
+                                    class="rounded-2xl border border-blue-500/20 bg-white p-4 text-center shadow-sm"
+                                >
+                                    <p
+                                        class="text-3xl font-semibold text-blue-500"
+                                    >
+                                        1
+                                    </p>
+                                    <p class="mt-1 text-sm text-text-muted">
+                                        Date
+                                    </p>
+                                </div>
+
+                                <div
+                                    class="rounded-2xl border border-blue-500/20 bg-white p-4 text-center shadow-sm"
+                                >
+                                    <p
+                                        class="text-3xl font-semibold text-blue-500"
+                                    >
+                                        {genres.length || 1}
+                                    </p>
+                                    <p class="mt-1 text-sm text-text-muted">
+                                        Genres
+                                    </p>
+                                </div>
+
+                                <div
+                                    class="rounded-2xl border border-blue-500/20 bg-white p-4 text-center shadow-sm"
+                                >
+                                    <p
+                                        class="text-3xl font-semibold text-blue-500"
+                                    >
+                                        1
+                                    </p>
+                                    <p class="mt-1 text-sm text-text-muted">
+                                        Scène
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-span-4 mt-12 lg:col-span-10 lg:col-start-2">
+                <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+                    <div class="lg:col-span-3">
+                        <h2 class="text-text">Galerie</h2>
+                    </div>
+
+                    <div class="mt-6 lg:col-span-9 lg:mt-0">
+                        {
+                            galerieUrls.length > 0 ? (
+                                <div class="grid grid-cols-2 gap-4 lg:grid-cols-3">
+                                    {galerieUrls.map((image) => (
+                                        <img
+                                            src={image.src}
+                                            alt={image.alt}
+                                            class="aspect-square w-full rounded-3xl object-cover shadow-sm"
+                                        />
+                                    ))}
+                                </div>
+                            ) : (
+                                <div class="rounded-3xl border border-blue-300/20 bg-white p-6 shadow-sm">
+                                    <p class="text-text-muted">
+                                        Aucune image supplémentaire pour cet
+                                        artiste.
+                                    </p>
+                                </div>
+                            )
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-span-4 mt-14 lg:col-span-10 lg:col-start-2">
+                <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+                    <div class="lg:col-span-3">
+                        <h2 class="text-text">Artistes similaires</h2>
+                    </div>
+
+                    <div class="mt-6 lg:col-span-9 lg:mt-0">
+                        {
+                            similarArtistes.length > 0 ? (
+                                <div class="grid grid-cols-2 gap-4 lg:grid-cols-3">
+                                    {similarArtistes.map((item) => {
+                                        const itemPhoto = item.photo
+                                            ? pb.files.getURL(item, item.photo)
+                                            : null;
+
+                                        const itemGenres = Array.isArray(
+                                            item.genre_musical,
+                                        )
+                                            ? item.genre_musical
+                                            : item.genre_musical
+                                              ? [item.genre_musical]
+                                              : [];
+
+                                        return (
+                                            <a
+                                                href={`/artistes/${item.id}`}
+                                                class="block rounded-3xl border border-blue-300/20 bg-white p-3 no-underline shadow-sm transition duration-300 hover:-translate-y-1 hover:border-coral-400"
+                                            >
+                                                {itemPhoto ? (
+                                                    <img
+                                                        src={itemPhoto}
+                                                        alt={item.nom}
+                                                        class="aspect-square w-full rounded-2xl object-cover"
+                                                    />
+                                                ) : (
+                                                    <div class="aspect-square w-full rounded-2xl bg-blue-300/20" />
+                                                )}
+
+                                                <h3 class="mt-3 text-lg text-text">
+                                                    {item.nom}
+                                                </h3>
+                                                <p class="mt-1 text-sm text-text-muted">
+                                                    {itemGenres
+                                                        .slice(0, 2)
+                                                        .join(" • ")}
+                                                </p>
+                                            </a>
+                                        );
+                                    })}
+                                </div>
+                            ) : (
+                                <div class="rounded-3xl border border-blue-300/20 bg-white p-6 shadow-sm">
+                                    <p class="text-text-muted">
+                                        Aucun artiste similaire trouvé.
+                                    </p>
+                                </div>
+                            )
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</Layout>

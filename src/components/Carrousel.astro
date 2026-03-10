@@ -1,0 +1,87 @@
+---
+const { images = [], title = "Galerie photos" } = Astro.props;
+
+const groups = [];
+for (let i = 0; i < images.length; i += 2) {
+    groups.push(images.slice(i, i + 2));
+}
+
+const carouselId = `carousel-${Math.random().toString(36).slice(2, 9)}`;
+---
+
+<section class="space-y-6">
+    <div id={carouselId} class="overflow-hidden">
+        <div
+            class="carousel-track flex transition-transform duration-500 ease-in-out"
+            style="transform: translateX(0%)"
+        >
+            {
+                groups.map((group) => (
+                    <div class="min-w-full">
+                        <div class="grid grid-cols-2 gap-4">
+                            {group.map((image: any) => (
+                                <div class="overflow-hidden">
+                                    <img
+                                        src={image.src}
+                                        alt={image.alt}
+                                        class="h-64 w-full object-cover sm:h-72 lg:h-80"
+                                    />
+                                </div>
+                            ))}
+
+                            {group.length === 1 && <div />}
+                        </div>
+                    </div>
+                ))
+            }
+        </div>
+
+        {
+            groups.length > 1 && (
+                <div class="mt-6 flex justify-center gap-3">
+                    {groups.map((_, index) => (
+                        <button
+                            type="button"
+                            class:list={[
+                                "carousel-dot h-3 w-3 rounded-full transition",
+                                index === 0 ? "bg-violet-500" : "bg-slate-300",
+                            ]}
+                            aria-label={`Aller à la slide ${index + 1}`}
+                            data-index={index}
+                        />
+                    ))}
+                </div>
+            )
+        }
+    </div>
+</section>
+
+<script>
+    const root = document.getElementById("{carouselId}");
+    if (root) {
+        const track = root.querySelector(".carousel-track");
+        const dots = [
+            ...root.querySelectorAll(".carousel-dot"),
+        ] as HTMLElement[];
+        let currentIndex = 0;
+
+        const updateCarousel = () => {
+            if (track) {
+                (track as HTMLElement).style.transform =
+                    `translateX(-${currentIndex * 100}%)`;
+            }
+
+            dots.forEach((dot, index) => {
+                dot.classList.toggle("bg-violet-500", index === currentIndex);
+                dot.classList.toggle("bg-slate-300", index !== currentIndex);
+            });
+        };
+
+        dots.forEach((dot) => {
+            dot.addEventListener("click", () => {
+                currentIndex = Number(dot.dataset.index);
+                updateCarousel();
+            });
+        });
+    }
+</script>

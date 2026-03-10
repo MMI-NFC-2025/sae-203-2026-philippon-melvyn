@@ -1,0 +1,213 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ArtistCard from "../../components/ArtisteCard.astro";
+import {
+    getArtistesByDate,
+    getArtistesAlphabetique,
+} from "../../js/backend.mjs";
+
+const seoTitle = "Artistes | Les Rives du Territoire";
+const description =
+    "Découvrez la liste des artistes programmés au festival Les Rives du Territoire.";
+
+const url = new URL(Astro.request.url);
+
+const q = url.searchParams.get("q")?.trim() || "";
+const sort = url.searchParams.get("sort") || "date";
+const day = url.searchParams.get("day") || "all";
+
+const artistesRaw =
+    sort === "alpha"
+        ? await getArtistesAlphabetique()
+        : await getArtistesByDate();
+
+const normalize = (value: any) =>
+    value
+        ?.toString()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase() || "";
+
+const getLocalDateOnly = (dateString: string) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+};
+
+let artistes = artistesRaw.filter((artiste) => {
+    const matchesSearch = !q || normalize(artiste.nom).includes(normalize(q));
+
+    const artisteDate = getLocalDateOnly(artiste.date_de_presentation);
+    const matchesDay = day === "all" || artisteDate === day;
+
+    return matchesSearch && matchesDay;
+});
+
+if (sort === "alpha") {
+    artistes.sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
+} else {
+    artistes.sort(
+        (a, b) =>
+            new Date(a.date_de_presentation).getTime() -
+            new Date(b.date_de_presentation).getTime(),
+    );
+}
+
+const makeUrl = (next: { q?: string; sort?: string; day?: string } = {}) => {
+    const params = new URLSearchParams();
+
+    const finalQ = next.q ?? q;
+    const finalSort = next.sort ?? sort;
+    const finalDay = next.day ?? day;
+
+    if (finalQ) params.set("q", finalQ);
+    if (finalSort !== "date") params.set("sort", finalSort);
+    if (finalDay !== "all") params.set("day", finalDay);
+
+    const search = params.toString();
+    return search ? `/Artistes?${search}` : "/Artistes";
+};
+---
+
+<Layout title={seoTitle} description={description}>
+    <section class="bg-white py-16 lg:py-24">
+        <div class="grille">
+            <div class="col-span-4 lg:col-span-12">
+                <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+                    <div class="lg:col-span-3">
+                        <h1 class="text-text">Artistes</h1>
+                        <p class="mt-3 text-text-muted">
+                            Découvrez tous les artistes programmés au festival.
+                        </p>
+                    </div>
+
+                    <div class="mt-8 lg:col-span-9 lg:mt-0">
+                        <form
+                            method="GET"
+                            class="rounded-[1.6rem] border border-blue-500 bg-white p-2 shadow-sm"
+                        >
+                            <div
+                                class="flex flex-col gap-3 lg:flex-row lg:items-center"
+                            >
+                                <input
+                                    type="search"
+                                    name="q"
+                                    value={q}
+                                    placeholder="Rechercher un artiste..."
+                                    class="w-full rounded-[1.2rem] border border-blue-300/30 bg-white px-4 py-3 text-text placeholder:text-text-muted/70 focus:border-blue-500 focus:outline-none"
+                                />
+
+                                <select
+                                    name="sort"
+                                    class="rounded-[1.2rem] border border-blue-300/30 bg-white px-4 py-3 text-text focus:border-blue-500 focus:outline-none"
+                                >
+                                    <option
+                                        value="date"
+                                        selected={sort === "date"}
+                                    >
+                                        Tri par date
+                                    </option>
+                                    <option
+                                        value="alpha"
+                                        selected={sort === "alpha"}
+                                    >
+                                        Tri alphabétique
+                                    </option>
+                                </select>
+
+                                <button
+                                    type="submit"
+                                    class="rounded-full bg-blue-500 px-6 py-3 font-semibold text-white transition hover:bg-coral-400"
+                                >
+                                    Filtrer
+                                </button>
+                            </div>
+                        </form>
+
+                        <div class="mt-6 flex flex-wrap gap-3">
+                            <a
+                                href={makeUrl({ day: "all" })}
+                                class:list={[
+                                    "rounded-full px-5 py-3 text-sm font-semibold no-underline transition",
+                                    day === "all"
+                                        ? "bg-blue-500 text-white"
+                                        : "bg-blue-300/20 text-text hover:bg-coral-400 hover:text-white",
+                                ]}
+                            >
+                                Tous
+                            </a>
+
+                            <a
+                                href={makeUrl({ day: "2026-12-20" })}
+                                class:list={[
+                                    "rounded-full px-5 py-3 text-sm font-semibold no-underline transition",
+                                    day === "2026-12-20"
+                                        ? "bg-blue-500 text-white"
+                                        : "bg-blue-300/20 text-text hover:bg-coral-400 hover:text-white",
+                                ]}
+                            >
+                                20 décembre
+                            </a>
+
+                            <a
+                                href={makeUrl({ day: "2026-12-21" })}
+                                class:list={[
+                                    "rounded-full px-5 py-3 text-sm font-semibold no-underline transition",
+                                    day === "2026-12-21"
+                                        ? "bg-blue-500 text-white"
+                                        : "bg-blue-300/20 text-text hover:bg-coral-400 hover:text-white",
+                                ]}
+                            >
+                                21 décembre
+                            </a>
+
+                            <a
+                                href={makeUrl({ day: "2026-12-22" })}
+                                class:list={[
+                                    "rounded-full px-5 py-3 text-sm font-semibold no-underline transition",
+                                    day === "2026-12-22"
+                                        ? "bg-blue-500 text-white"
+                                        : "bg-blue-300/20 text-text hover:bg-coral-400 hover:text-white",
+                                ]}
+                            >
+                                22 décembre
+                            </a>
+
+                            <a
+                                href={makeUrl({ day: "2026-12-23" })}
+                                class:list={[
+                                    "rounded-full px-5 py-3 text-sm font-semibold no-underline transition",
+                                    day === "2026-12-23"
+                                        ? "bg-blue-500 text-white"
+                                        : "bg-blue-300/20 text-text hover:bg-coral-400 hover:text-white",
+                                ]}
+                            >
+                                23 décembre
+                            </a>
+                        </div>
+
+                        <div class="mt-8 grid gap-5 lg:grid-cols-2">
+                            {
+                                artistes.length > 0 ? (
+                                    artistes.map((artiste) => (
+                                        <ArtistCard artiste={artiste} />
+                                    ))
+                                ) : (
+                                    <div class="rounded-4xl border border-blue-300/30 bg-white p-6 shadow-sm lg:col-span-2">
+                                        <p class="text-text-muted">
+                                            Aucun artiste ne correspond à votre
+                                            recherche.
+                                        </p>
+                                    </div>
+                                )
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</Layout>

@@ -1,27 +1,278 @@
 ---
-import PictureHero from "../components/Picture.astro";
 import Layout from "../layouts/Layout.astro";
 import Hero from "../components/Hero.astro";
-import imgHero from "../assets/img/hero_apropos2.avif";
+import PictureHero from "../components/Picture.astro";
+import Carousel from "../components/Carrousel.astro";
 
-const seotitle = "Le Festival | Les Rives du Territoire";
-const pagetitle = "À propos";
-const subTitle = "Découvrez l’histoire et l’esprit du festival";
-const description =
-    "Le festival Les Rives du Territoire se déroule à Belfort du 20 au 23 décembre 2026. Découvrez son histoire, ses valeurs et l’équipe qui organise cet événement musical.";
+import heroImage from "../assets/img/hero_apropos2.avif";
+
+import avatar1 from "../assets/img/avatar1.webp";
+import avatar2 from "../assets/img/avatar2.webp";
+import avatar3 from "../assets/img/avatar3.webp";
+
+import galerie1 from "../assets/img/hero_apropos2.avif";
+import galerie2 from "../assets/img/hero_apropos2.avif";
+import galerie3 from "../assets/img/hero_apropos2.avif";
 ---
 
-<Layout title={seotitle} description={description}>
-    <Hero title={pagetitle} subTitle={subTitle}>
-        <PictureHero
-            slot="image"
-            src={imgHero}
-            alt="Violoncelles"
-            layout="full-width"
-            pictureAttributes={{ class: "absolute inset-0 object-cover" }}
-        />
+<Layout
+    title="Le festival | Les Rives du Territoire"
+    description="Découvrez l’histoire, l’équipe, les valeurs et l’univers du festival Les Rives du Territoire."
+>
+    <Hero
+        title="À propos"
+        subTitle="Découvrez l’histoire et l’esprit du festival"
+    >
+        <PictureHero slot="image" src={heroImage} alt="Ambiance du festival" />
     </Hero>
+
+    <section class="bg-white py-16 lg:py-24">
+        <div class="grille">
+            <div class="col-span-4 lg:col-span-12">
+                <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+                    <div class="lg:col-span-3">
+                        <h2 class="text-text">Historique</h2>
+                    </div>
+
+                    <div class="mt-8 space-y-5 lg:col-span-9 lg:mt-0">
+                        <article
+                            class="rounded-3xl border border-blue-300/20 bg-white p-6 shadow-sm"
+                        >
+                            <div class="flex items-start gap-4">
+                                <div
+                                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-300 text-sm font-semibold text-white"
+                                >
+                                    1
+                                </div>
+
+                                <div>
+                                    <h3 class="text-xl text-text">
+                                        2010 - Les débuts
+                                    </h3>
+                                    <p class="mt-2 text-text-muted">
+                                        Création du festival avec une vision
+                                        simple : rassembler les artistes locaux
+                                        et créer des liens authentiques avec le
+                                        public.
+                                    </p>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article
+                            class="rounded-3xl border border-blue-300/20 bg-white p-6 shadow-sm"
+                        >
+                            <div class="flex items-start gap-4">
+                                <div
+                                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-500 text-sm font-semibold text-white"
+                                >
+                                    2
+                                </div>
+
+                                <div>
+                                    <h3 class="text-xl text-text">
+                                        2015 - Expansion
+                                    </h3>
+                                    <p class="mt-2 text-text-muted">
+                                        Ouverture à des artistes internationaux
+                                        tout en gardant notre identité locale et
+                                        notre engagement écologique.
+                                    </p>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article
+                            class="rounded-3xl border border-blue-300/20 bg-white p-6 shadow-sm"
+                        >
+                            <div class="flex items-start gap-4">
+                                <div
+                                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-text text-sm font-semibold text-white"
+                                >
+                                    3
+                                </div>
+
+                                <div>
+                                    <h3 class="text-xl text-text">
+                                        2020 - Adaptation
+                                    </h3>
+                                    <p class="mt-2 text-text-muted">
+                                        Réinvention du format avec des
+                                        expériences hybrides et un engagement
+                                        renforcé pour la durabilité.
+                                    </p>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-white py-16 lg:py-24">
+        <div class="grille">
+            <div class="col-span-4 lg:col-span-12">
+                <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+                    <div class="lg:col-span-3">
+                        <h2 class="text-text">Notre équipe</h2>
+                    </div>
+
+                    <div
+                        class="mt-8 grid gap-5 lg:col-span-9 lg:mt-0 lg:grid-cols-3"
+                    >
+                        <article
+                            class="rounded-3xl border border-blue-300/20 bg-white p-5 shadow-sm"
+                        >
+                            <div class="flex items-center gap-4">
+                                <img
+                                    src={avatar1.src}
+                                    alt="Sienna Mcguire"
+                                    class="h-16 w-16 rounded-full object-cover"
+                                />
+
+                                <div>
+                                    <h3 class="text-xl text-text">
+                                        Sienna Mcguire
+                                    </h3>
+                                    <p class="font-semibold text-blue-500">
+                                        Directrice artistique
+                                    </p>
+                                    <p class="mt-1 text-text-muted">
+                                        Passionnée de musique depuis 15 ans
+                                    </p>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article
+                            class="rounded-3xl border border-blue-300/20 bg-white p-5 shadow-sm"
+                        >
+                            <div class="flex items-center gap-4">
+                                <img
+                                    src={avatar2.src}
+                                    alt="Jason Cooper"
+                                    class="h-16 w-16 rounded-full object-cover"
+                                />
+
+                                <div>
+                                    <h3 class="text-xl text-text">
+                                        Jason Cooper
+                                    </h3>
+                                    <p class="font-semibold text-blue-500">
+                                        Coordinateur événements
+                                    </p>
+                                    <p class="mt-1 text-text-muted">
+                                        Expert en production culturelle
+                                    </p>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article
+                            class="rounded-3xl border border-blue-300/20 bg-white p-5 shadow-sm"
+                        >
+                            <div class="flex items-center gap-4">
+                                <img
+                                    src={avatar3.src}
+                                    alt="Chloé Reese"
+                                    class="h-16 w-16 rounded-full object-cover"
+                                />
+
+                                <div>
+                                    <h3 class="text-xl text-text">
+                                        Chloé Reese
+                                    </h3>
+                                    <p class="font-semibold text-blue-500">
+                                        Responsable durabilité
+                                    </p>
+                                    <p class="mt-1 text-text-muted">
+                                        Spécialiste en événements
+                                        éco-responsables
+                                    </p>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-white py-16 lg:py-24">
+        <div class="grille">
+            <div class="col-span-4 lg:col-span-12">
+                <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+                    <div class="lg:col-span-3">
+                        <h2 class="text-text">Nos valeurs</h2>
+                    </div>
+
+                    <div
+                        class="mt-8 grid gap-5 lg:col-span-9 lg:mt-0 lg:grid-cols-3"
+                    >
+                        <article
+                            class="rounded-3xl border border-blue-300/40 bg-blue-300/40 p-6 shadow-sm"
+                        >
+                            <h3 class="text-2xl text-text">Créativité</h3>
+                            <p class="mt-4 text-text/80">
+                                Nous encourageons l’innovation artistique et
+                                offrons une plateforme aux talents émergents
+                                pour exprimer leur vision unique.
+                            </p>
+                        </article>
+
+                        <article
+                            class="rounded-3xl border border-coral-400/30 bg-coral-400/20 p-6 shadow-sm"
+                        >
+                            <h3 class="text-2xl text-text">Proximité</h3>
+                            <p class="mt-4 text-text/80">
+                                Nous créons des liens authentiques entre
+                                artistes et public, privilégiant les rencontres
+                                humaines et les échanges sincères.
+                            </p>
+                        </article>
+
+                        <article
+                            class="rounded-3xl border border-blue-500/20 bg-blue-500/10 p-6 shadow-sm"
+                        >
+                            <h3 class="text-2xl text-text">Durabilité</h3>
+                            <p class="mt-4 text-text/80">
+                                Nous nous engageons pour un festival
+                                éco-responsable, respectueux de l’environnement
+                                et des générations futures.
+                            </p>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-white py-16 lg:py-24">
+        <div class="grille">
+            <div class="col-span-4 lg:col-span-12">
+                <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+                    <div class="lg:col-span-3">
+                        <h2 class="text-text">Galerie photos</h2>
+                    </div>
+
+                    <div class="mt-8 lg:col-span-9 lg:mt-0">
+                        <Carousel
+                            images={[
+                                { src: galerie1.src, alt: "Scène du festival" },
+                                {
+                                    src: galerie2.src,
+                                    alt: "Concert au festival",
+                                },
+                                {
+                                    src: galerie3.src,
+                                    alt: "Ambiance du public",
+                                },
+                            ]}
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </Layout>
-
-
-

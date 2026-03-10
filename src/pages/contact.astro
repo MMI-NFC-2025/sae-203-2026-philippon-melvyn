@@ -1,24 +1,249 @@
 ---
-import PictureHero from "../components/Picture.astro";
 import Layout from "../layouts/Layout.astro";
 import Hero from "../components/Hero.astro";
-import imgHero from "../assets/img/hero_apropos2.avif";
+import PictureHero from "../components/Picture.astro";
 
-const seotitle = "Contact | Festival Les Rives du Territoire";
-const pagetitle = "Contact";
-const subTitle = "Une question ? Contactez-nous";
-const description =
-    "Besoin d’informations sur le festival Les Rives du Territoire ? Contactez l’équipe d’organisation pour toute question concernant l’événement, les artistes ou les informations pratiques.";
+import heroImage from "../assets/img/hero_apropos2.avif";
+
+import IconMail from "../assets/icones/mail.svg";
+import IconTelephone from "../assets/icones/telephone.svg";
+import IconEnvoyer from "../assets/icones/envoyer.svg";
+import IconLocalisation from "../assets/icones/localisation.svg";
+
+import IconInstagram from "../assets/icones/icon_instagram.svg";
+import IconDiscord from "../assets/icones/icon_discord.svg";
+import IconFacebook from "../assets/icones/icon_facebook.svg";
+import IconLinkedin from "../assets/icones/icon_linkedin.svg";
 ---
 
-<Layout title={seotitle} description={description}>
-    <Hero title={pagetitle} subTitle={subTitle}>
-        <PictureHero
-            slot="image"
-            src={imgHero}
-            alt="Violoncelles"
-            layout="full-width"
-            pictureAttributes={{ class: "absolute inset-0 object-cover" }}
-        />
+<Layout
+    title="Contact | Les Rives du Territoire"
+    description="Contactez l’équipe du festival Les Rives du Territoire."
+>
+    <Hero title="Contact" subTitle="Une question ? Contactez-nous">
+        <PictureHero slot="image" src={heroImage} alt="Ambiance du festival" />
+
+        <div slot="chapo" class="space-y-5">
+            <p class="text-text">
+                Une demande, une question ou un besoin d’information sur le
+                festival ?
+            </p>
+
+            <p class="text-text-muted">
+                Notre équipe vous répond dans les meilleurs délais.
+            </p>
+        </div>
     </Hero>
+
+    <section class="bg-white py-16 lg:py-24">
+        <div class="grille">
+            <div class="col-span-4 lg:col-span-12">
+                <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+                    <div class="lg:col-span-7">
+                        <div
+                            class="rounded-3xl border border-blue-300/20 bg-white p-6 shadow-sm sm:p-8"
+                        >
+                            <div class="mb-8 flex items-center gap-3">
+                                <span class="text-coral-400">
+                                    <IconEnvoyer class="h-6 w-6" />
+                                </span>
+                                <h2 class="text-text">
+                                    Envoyez-nous un message
+                                </h2>
+                            </div>
+
+                            <form class="space-y-5">
+                                <div>
+                                    <label
+                                        for="nom"
+                                        class="mb-2 block text-sm font-semibold text-text"
+                                    >
+                                        Nom complet
+                                    </label>
+                                    <input
+                                        id="nom"
+                                        type="text"
+                                        placeholder="Votre nom et prénom"
+                                        class="w-full rounded-2xl border border-blue-300/20 bg-white px-4 py-3 text-text placeholder:text-text-muted/60 focus:border-blue-500 focus:outline-none"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label
+                                        for="email"
+                                        class="mb-2 block text-sm font-semibold text-text"
+                                    >
+                                        Email
+                                    </label>
+                                    <input
+                                        id="email"
+                                        type="email"
+                                        placeholder="votre@email.com"
+                                        class="w-full rounded-2xl border border-blue-300/20 bg-white px-4 py-3 text-text placeholder:text-text-muted/60 focus:border-blue-500 focus:outline-none"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label
+                                        for="sujet"
+                                        class="mb-2 block text-sm font-semibold text-text"
+                                    >
+                                        Sujet
+                                    </label>
+                                    <select
+                                        id="sujet"
+                                        class="w-full rounded-2xl border border-blue-300/20 bg-white px-4 py-3 text-text focus:border-blue-500 focus:outline-none"
+                                    >
+                                        <option>Choisir un sujet</option>
+                                        <option>Informations pratiques</option>
+                                        <option>Programmation</option>
+                                        <option>Partenariat</option>
+                                        <option>Presse</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label
+                                        for="message"
+                                        class="mb-2 block text-sm font-semibold text-text"
+                                    >
+                                        Message
+                                    </label>
+                                    <textarea
+                                        id="message"
+                                        rows="5"
+                                        placeholder="Décrivez votre demande en détail..."
+                                        class="w-full rounded-2xl border border-blue-300/20 bg-white px-4 py-3 text-text placeholder:text-text-muted/60 focus:border-blue-500 focus:outline-none"
+                                    ></textarea>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    class="inline-flex w-full items-center justify-center gap-3 rounded-2xl bg-blue-500 px-6 py-4 text-base font-semibold text-white transition hover:bg-coral-400"
+                                >
+                                    <IconEnvoyer class="h-5 w-5" />
+                                    Envoyer le message
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 space-y-8 lg:col-span-5 lg:mt-0">
+                        <div
+                            class="rounded-3xl border border-blue-300/20 bg-white p-6 shadow-sm sm:p-8"
+                        >
+                            <div class="mb-8 flex items-center gap-3">
+                                <span class="text-coral-400">
+                                    <IconMail class="h-6 w-6" />
+                                </span>
+                                <h2 class="text-text">Nos coordonnées</h2>
+                            </div>
+
+                            <div class="space-y-4">
+                                <article class="rounded-2xl bg-blue-300/10 p-5">
+                                    <div class="flex items-start gap-4">
+                                        <span class="text-coral-400">
+                                            <IconMail class="h-6 w-6" />
+                                        </span>
+
+                                        <div>
+                                            <h3 class="text-lg text-text">
+                                                Email
+                                            </h3>
+                                            <p class="mt-1 text-text-muted">
+                                                contact@lesrivesduterritoire.fr
+                                            </p>
+                                            <p class="text-text-muted">
+                                                support@lesrivesduterritoire.fr
+                                            </p>
+                                        </div>
+                                    </div>
+                                </article>
+
+                                <article class="rounded-2xl bg-blue-300/10 p-5">
+                                    <div class="flex items-start gap-4">
+                                        <span class="text-coral-400">
+                                            <IconTelephone class="h-6 w-6" />
+                                        </span>
+
+                                        <div>
+                                            <h3 class="text-lg text-text">
+                                                Téléphone
+                                            </h3>
+                                            <p class="mt-1 text-text-muted">
+                                                +33 1 23 45 67 89
+                                            </p>
+                                            <p class="text-text-muted">
+                                                Lun–Ven 9h-18h
+                                            </p>
+                                        </div>
+                                    </div>
+                                </article>
+
+                                <article class="rounded-2xl bg-blue-300/10 p-5">
+                                    <div class="flex items-start gap-4">
+                                        <span class="text-coral-400">
+                                            <IconLocalisation class="h-6 w-6" />
+                                        </span>
+
+                                        <div>
+                                            <h3 class="text-lg text-text">
+                                                Adresse
+                                            </h3>
+                                            <p class="mt-1 text-text-muted">
+                                                Belfort
+                                            </p>
+                                            <p class="text-text-muted">
+                                                Territoire de Belfort
+                                            </p>
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
+
+                        <div
+                            class="rounded-3xl border border-blue-300/20 bg-white p-6 shadow-sm sm:p-8"
+                        >
+                            <h2 class="mb-8 text-text">Suivez-nous</h2>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <a
+                                    href="#"
+                                    class="flex items-center gap-3 rounded-2xl bg-blue-500 p-5 text-white no-underline transition hover:bg-coral-400"
+                                >
+                                    <IconFacebook class="h-5 w-5" />
+                                    <span class="font-semibold">Facebook</span>
+                                </a>
+
+                                <a
+                                    href="#"
+                                    class="flex items-center gap-3 rounded-2xl bg-blue-500 p-5 text-white no-underline transition hover:bg-coral-400"
+                                >
+                                    <IconDiscord class="h-5 w-5" />
+                                    <span class="font-semibold">Discord</span>
+                                </a>
+
+                                <a
+                                    href="#"
+                                    class="flex items-center gap-3 rounded-2xl bg-blue-500 p-5 text-white no-underline transition hover:bg-coral-400"
+                                >
+                                    <IconLinkedin class="h-5 w-5" />
+                                    <span class="font-semibold">LinkedIn</span>
+                                </a>
+
+                                <a
+                                    href="#"
+                                    class="flex items-center gap-3 rounded-2xl bg-blue-500 p-5 text-white no-underline transition hover:bg-coral-400"
+                                >
+                                    <IconInstagram class="h-5 w-5" />
+                                    <span class="font-semibold">Instagram</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </Layout>

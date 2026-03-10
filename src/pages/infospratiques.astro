@@ -1,24 +1,225 @@
 ---
-import PictureHero from "../components/Picture.astro";
 import Layout from "../layouts/Layout.astro";
 import Hero from "../components/Hero.astro";
-import imgHero from "../assets/img/hero_apropos2.avif";
-
-const seotitle = "Infos pratiques | Festival Les Rives du Territoire";
-const pagetitle = "Infos pratiques";
-const subTitle = "Préparez votre venue au festival";
-const description =
-    "Retrouvez toutes les informations pratiques pour assister au festival Les Rives du Territoire à Belfort : accès, transport, hébergements, tarifs et conseils pour profiter de l'événement.";
+import PictureHero from "../components/Picture.astro";
+import TarifCarrousel from "../components/TarifCarrousel.astro";
+import heroImage from "../assets/img/hero_apropos2.avif";
 ---
 
-<Layout title={seotitle} description={description}>
-    <Hero title={pagetitle} subTitle={subTitle}>
-        <PictureHero
-            slot="image"
-            src={imgHero}
-            alt="Violoncelles"
-            layout="full-width"
-            pictureAttributes={{ class: "absolute inset-0 object-cover" }}
-        />
+<Layout
+    title="Infos pratiques | Les Rives du Territoire"
+    description="Toutes les informations pratiques pour préparer votre venue au festival Les Rives du Territoire."
+>
+    <Hero title="Infos pratiques" subTitle="Préparez votre venue au festival">
+        <PictureHero slot="image" src={heroImage} alt="Ambiance du festival" />
+
+        <div slot="chapo" class="space-y-5">
+            <p class="text-text">
+                Retrouvez toutes les informations utiles pour profiter
+                pleinement du festival.
+            </p>
+
+            <p class="text-text-muted">
+                Tarifs, hébergements, accès, transports et réponses aux
+                questions les plus fréquentes.
+            </p>
+        </div>
     </Hero>
+
+    <section class="bg-white py-16 lg:py-24">
+        <div class="grille">
+            <div class="col-span-4 lg:col-span-12">
+                <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+                    <div class="lg:col-span-3">
+                        <h2 class="text-text">Tarif</h2>
+                    </div>
+
+                    <div class="mt-8 lg:col-span-9 lg:mt-0">
+                        <TarifCarrousel />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-white py-16 lg:py-24">
+        <div class="grille">
+            <div class="col-span-4 lg:col-span-12">
+                <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+                    <div class="lg:col-span-3">
+                        <h2 class="text-text">Hébergement</h2>
+                    </div>
+
+                    <div class="mt-8 space-y-4 lg:col-span-9 lg:mt-0">
+                        <article
+                            class="rounded-3xl bg-blue-300/40 p-6 shadow-sm"
+                        >
+                            <h3 class="text-xl text-text">
+                                Hôtels partenaires
+                            </h3>
+                            <p class="mt-3 text-text-muted">
+                                Plusieurs hôtels situés à proximité du
+                                centre-ville proposent des tarifs préférentiels
+                                pour les festivaliers.
+                            </p>
+                        </article>
+
+                        <article
+                            class="rounded-3xl bg-blue-300/40 p-6 shadow-sm"
+                        >
+                            <h3 class="text-xl text-text">Chambres d’hôtes</h3>
+                            <p class="mt-3 text-text-muted">
+                                Pour une ambiance plus conviviale, des
+                                hébergements chez l’habitant sont disponibles
+                                dans Belfort et ses alentours.
+                            </p>
+                        </article>
+
+                        <article
+                            class="rounded-3xl bg-blue-300/40 p-6 shadow-sm"
+                        >
+                            <h3 class="text-xl text-text">
+                                Camping et solutions économiques
+                            </h3>
+                            <p class="mt-3 text-text-muted">
+                                Des solutions plus abordables sont accessibles
+                                pour les groupes et les visiteurs souhaitant
+                                rester plusieurs jours.
+                            </p>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-white py-16 lg:py-24">
+        <div class="grille">
+            <div class="col-span-4 lg:col-span-12">
+                <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+                    <div class="lg:col-span-3">
+                        <h2 class="text-text">Transport & accès</h2>
+                    </div>
+
+                    <div
+                        class="mt-8 grid grid-cols-2 gap-4 lg:col-span-9 lg:mt-0 lg:grid-cols-4"
+                    >
+                        <article
+                            class="rounded-3xl bg-blue-300/40 p-5 shadow-sm"
+                        >
+                            <h3 class="text-lg text-text">Train</h3>
+                            <p class="mt-3 text-text-muted">
+                                Gare de Belfort accessible depuis plusieurs
+                                grandes villes.
+                            </p>
+                        </article>
+
+                        <article
+                            class="rounded-3xl bg-blue-300/40 p-5 shadow-sm"
+                        >
+                            <h3 class="text-lg text-text">Voiture</h3>
+                            <p class="mt-3 text-text-muted">
+                                Parkings relais et stationnements à proximité du
+                                festival.
+                            </p>
+                        </article>
+
+                        <article
+                            class="rounded-3xl bg-blue-300/40 p-5 shadow-sm"
+                        >
+                            <h3 class="text-lg text-text">Bus</h3>
+                            <p class="mt-3 text-text-muted">
+                                Réseau local renforcé pendant toute la durée de
+                                l’événement.
+                            </p>
+                        </article>
+
+                        <article
+                            class="rounded-3xl bg-blue-300/40 p-5 shadow-sm"
+                        >
+                            <h3 class="text-lg text-text">Covoiturage</h3>
+                            <p class="mt-3 text-text-muted">
+                                Une option pratique et responsable pour
+                                rejoindre Belfort.
+                            </p>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-white py-16 lg:py-24">
+        <div class="grille">
+            <div class="col-span-4 lg:col-span-12">
+                <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+                    <div class="lg:col-span-3">
+                        <h2 class="text-text">Questions fréquentes</h2>
+                    </div>
+
+                    <div class="mt-8 space-y-4 lg:col-span-9 lg:mt-0">
+                        <details
+                            class="rounded-3xl border border-blue-300/30 bg-white p-5 shadow-sm"
+                        >
+                            <summary
+                                class="cursor-pointer text-lg font-semibold text-text"
+                            >
+                                Peut-on acheter des billets sur place ?
+                            </summary>
+                            <p class="mt-3 text-text-muted">
+                                Oui, dans la limite des places disponibles. Nous
+                                conseillons néanmoins de réserver en ligne à
+                                l’avance.
+                            </p>
+                        </details>
+
+                        <details
+                            class="rounded-3xl border border-blue-300/30 bg-white p-5 shadow-sm"
+                        >
+                            <summary
+                                class="cursor-pointer text-lg font-semibold text-text"
+                            >
+                                Le festival est-il accessible aux mineurs ?
+                            </summary>
+                            <p class="mt-3 text-text-muted">
+                                Oui, les mineurs peuvent assister au festival.
+                                Certains espaces peuvent toutefois nécessiter un
+                                accompagnement.
+                            </p>
+                        </details>
+
+                        <details
+                            class="rounded-3xl border border-blue-300/30 bg-white p-5 shadow-sm"
+                        >
+                            <summary
+                                class="cursor-pointer text-lg font-semibold text-text"
+                            >
+                                Y a-t-il des espaces de restauration sur place ?
+                            </summary>
+                            <p class="mt-3 text-text-muted">
+                                Oui, plusieurs food trucks, stands et buvettes
+                                seront présents sur l’ensemble du site du
+                                festival.
+                            </p>
+                        </details>
+
+                        <details
+                            class="rounded-3xl border border-blue-300/30 bg-white p-5 shadow-sm"
+                        >
+                            <summary
+                                class="cursor-pointer text-lg font-semibold text-text"
+                            >
+                                Peut-on sortir et revenir avec le même billet ?
+                            </summary>
+                            <p class="mt-3 text-text-muted">
+                                Selon le type de pass acheté, une sortie
+                                temporaire peut être autorisée. Les modalités
+                                seront précisées à l’entrée.
+                            </p>
+                        </details>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </Layout>

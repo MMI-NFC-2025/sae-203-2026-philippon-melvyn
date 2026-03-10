@@ -1,0 +1,179 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PocketBase from "pocketbase";
+
+const title = "Connexion | Festival Les Rives du Territoire";
+const description = "Connexion ou inscription au festival.";
+
+let mode = "login";
+let errorMessage = "";
+let successMessage = "";
+
+if (Astro.request.method === "POST") {
+    const formData = await Astro.request.formData();
+
+    mode = formData.get("mode")?.toString() || "login";
+    const email = formData.get("email")?.toString() || "";
+    const password = formData.get("password")?.toString() || "";
+    const passwordConfirm = formData.get("passwordConfirm")?.toString() || "";
+
+    const pb = new PocketBase("https://sae203.melvyn-philippon.fr");
+
+    try {
+        if (mode === "register") {
+            await pb.collection("users").create({
+                email,
+                password,
+                passwordConfirm,
+            });
+
+            successMessage =
+                "Compte créé avec succès. Vous pouvez maintenant vous connecter.";
+            mode = "login";
+        } else {
+            await pb.collection("users").authWithPassword(email, password);
+
+            Astro.cookies.set("pb_auth", pb.authStore.exportToCookie(), {
+                path: "/",
+                httpOnly: true,
+                secure: true,
+                sameSite: "lax",
+            });
+
+            return Astro.redirect("/");
+        }
+    } catch (error) {
+        errorMessage =
+            "Une erreur est survenue. Vérifiez les informations saisies.";
+    }
+}
+---
+
+<Layout title={title} description={description}>
+    <section class="bg-white py-16 lg:py-24">
+        <div class="grille">
+            <div class="col-span-4 lg:col-span-6 lg:col-start-4">
+                <div
+                    class="rounded-3xl border border-blue-300/30 bg-white p-8 shadow-lg lg:p-10"
+                >
+                    <div class="mb-8 text-center">
+                        <h1 class="text-text">
+                            {mode === "login" ? "Connexion" : "Inscription"}
+                        </h1>
+
+                        <p class="mt-2 text-text-muted">
+                            {
+                                mode === "login"
+                                    ? "Connectez-vous à votre espace."
+                                    : "Créez votre compte utilisateur."
+                            }
+                        </p>
+                    </div>
+
+                    {
+                        errorMessage && (
+                            <p class="mb-5 rounded-2xl bg-coral-400/20 px-4 py-3 text-sm text-text">
+                                {errorMessage}
+                            </p>
+                        )
+                    }
+
+                    {
+                        successMessage && (
+                            <p class="mb-5 rounded-2xl bg-blue-300/30 px-4 py-3 text-sm text-text">
+                                {successMessage}
+                            </p>
+                        )
+                    }
+
+                    <form method="POST" class="space-y-5">
+                        <input type="hidden" name="mode" value={mode} />
+
+                        <div>
+                            <label
+                                for="email"
+                                class="mb-2 block text-sm font-semibold text-text"
+                            >
+                                Adresse email
+                            </label>
+                            <input
+                                id="email"
+                                name="email"
+                                type="email"
+                                required
+                                class="w-full rounded-2xl border border-blue-300/40 px-4 py-3"
+                            />
+                        </div>
+
+                        <div>
+                            <label
+                                for="password"
+                                class="mb-2 block text-sm font-semibold text-text"
+                            >
+                                Mot de passe
+                            </label>
+                            <input
+                                id="password"
+                                name="password"
+                                type="password"
+                                required
+                                class="w-full rounded-2xl border border-blue-300/40 px-4 py-3"
+                            />
+                        </div>
+
+                        {
+                            mode === "register" && (
+                                <div>
+                                    <label
+                                        for="passwordConfirm"
+                                        class="mb-2 block text-sm font-semibold text-text"
+                                    >
+                                        Confirmer le mot de passe
+                                    </label>
+                                    <input
+                                        id="passwordConfirm"
+                                        name="passwordConfirm"
+                                        type="password"
+                                        required
+                                        class="w-full rounded-2xl border border-blue-300/40 px-4 py-3"
+                                    />
+                                </div>
+                            )
+                        }
+
+                        <button
+                            type="submit"
+                            class="w-full rounded-full bg-blue-500 px-8 py-4 font-semibold text-white transition hover:bg-coral-400"
+                        >
+                            {
+                                mode === "login"
+                                    ? "Se connecter"
+                                    : "Créer un compte"
+                            }
+                        </button>
+                    </form>
+
+                    <div class="mt-6 text-center">
+                        {
+                            mode === "login" ? (
+                                <a
+                                    href="/connexion?mode=register"
+                                    class="text-sm font-semibold text-blue-500 no-underline hover:text-coral-400"
+                                >
+                                    Créer un compte
+                                </a>
+                            ) : (
+                                <a
+                                    href="/connexion"
+                                    class="text-sm font-semibold text-blue-500 no-underline hover:text-coral-400"
+                                >
+                                    Déjà un compte ? Se connecter
+                                </a>
+                            )
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</Layout>

@@ -1,0 +1,67 @@
+---
+import { pb } from "../js/backend.mjs";
+
+const { artiste } = Astro.props;
+
+if (!artiste) {
+    throw new Error("La prop 'artiste' est manquante dans ArtisteCard.astro");
+}
+
+const photoUrl = artiste.photo ? pb.files.getURL(artiste, artiste.photo) : null;
+
+const sceneName = artiste.expand?.production?.nom || "Scène";
+
+const dateObj = artiste.date_de_presentation
+    ? new Date(artiste.date_de_presentation)
+    : null;
+
+const dateLabel = dateObj
+    ? dateObj.toLocaleDateString("fr-FR", {
+          day: "numeric",
+          month: "long",
+      })
+    : "";
+
+const hourLabel = dateObj
+    ? dateObj.toLocaleTimeString("fr-FR", {
+          hour: "2-digit",
+          minute: "2-digit",
+      })
+    : "";
+---
+
+<a
+    href={`/Artistes/${artiste.id}`}
+    class="block rounded-4xl bg-blue-300/30 p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+>
+    <div class="flex items-center gap-5">
+        <div class="h-24 w-24 shrink-0 overflow-hidden rounded-[1.6rem]">
+            {
+                photoUrl ? (
+                    <img
+                        src={photoUrl}
+                        alt={artiste.nom}
+                        class="h-full w-full object-cover"
+                    />
+                ) : (
+                    <div class="h-full w-full bg-blue-300/40" />
+                )
+            }
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <h2 class="text-2xl font-semibold text-blue-500">
+                {artiste.nom}
+            </h2>
+
+            <div class="flex items-center gap-3 text-text">
+                <span class="font-medium">{dateLabel}</span>
+                <span>{hourLabel}</span>
+            </div>
+
+            <p class="font-semibold text-text">
+                {sceneName}
+            </p>
+        </div>
+    </div>
+</a>
