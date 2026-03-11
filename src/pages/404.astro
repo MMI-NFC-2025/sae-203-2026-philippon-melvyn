@@ -1,0 +1,53 @@
+---
+import "../styles/global.css";
+
+const title = "404 | Page introuvable";
+const description =
+    "La page que vous recherchez n'existe pas ou n'est plus disponible.";
+---
+
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>{title}</title>
+        <meta name="description" content={description} />
+
+        <link rel="stylesheet" href="/src/styles/global.css" />
+    </head>
+
+    <body class="bg-background text-text">
+        <main class="flex min-h-screen items-center justify-center py-28">
+            <div class="grille w-full">
+                <div class="col-span-4 lg:col-span-12">
+                    <div class="mx-auto max-w-3xl text-center">
+                        <p
+                            class="text-7xl font-semibold text-blue-500 lg:text-8xl"
+                        >
+                            Erreur 404
+                        </p>
+                        <h1 class="mt-4 text-text">Page introuvable</h1>
+
+                        <p class="mt-6 text-lg text-text-muted">
+                            La page que vous recherchez n’existe pas, a été
+                            déplacée ou n’est plus disponible.
+                        </p>
+
+                        <div
+                            class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
+                        >
+                            <a
+                                href="/"
+                                class="rounded-full bg-blue-500 px-6 py-3 font-semibold text-white no-underline transition hover:bg-coral-400"
+                            >
+                                Retour à l'accueil
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

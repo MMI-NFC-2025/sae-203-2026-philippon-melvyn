@@ -6,6 +6,7 @@ import "@fontsource-variable/playfair-display";
 
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import { getPBFromRequest } from "../js/backend.mjs";
 
 interface Props {
 	title?: string;
@@ -20,6 +21,11 @@ const {
 const siteName = "Les rives du territoire";
 const titleHead =
 	Astro.url.pathname === "/" ? siteName : `${title} — ${siteName}`;
+
+// compute login state from incoming request cookies
+const pb = getPBFromRequest(Astro.request);
+const isAuthenticated = pb.authStore.isValid;
+const currentUser = isAuthenticated ? pb.authStore.model : null;
 ---
 
 <!doctype html>
@@ -44,17 +50,13 @@ const titleHead =
 		<meta name="theme-color" content="#3A8CE9" />
 	</head>
 
+	<body class="min-h-screen flex flex-col bg-background text-text font-sans">
+		<Header isAuthenticated={isAuthenticated} user={currentUser} />
 
-		<body
-			class="min-h-screen flex flex-col bg-background text-text font-sans"
-		>
-			<Header />
+		<main id="main-content" class="flex-1">
+			<slot />
+		</main>
 
-			<main id="main-content" class="flex-1 ">
-				<slot />
-			</main>
-
-			<Footer />
-		</body>
+		<Footer />
 	</body>
 </html>

@@ -1,8 +1,24 @@
 import PocketBase from "pocketbase";
 
 export const pb = new PocketBase("http://0.0.0.0:8090");
-
 pb.autoCancellation(false);
+
+/**
+ * Return a PocketBase instance whose auth store is initialized from the
+ * cookies of an incoming Astro request.  This lets SSR handlers know if
+ * the user is already logged in and keeps the token server-side.
+ *
+ * @param {import("astro").AstroRequest} request
+ * @returns {import("pocketbase").PocketBase}
+ */
+export function getPBFromRequest(request) {
+    const instance = new PocketBase("http://0.0.0.0:8090");
+    instance.autoCancellation(false);
+
+    const cookieHeader = request.headers.get("cookie") || "";
+    instance.authStore.loadFromCookie(cookieHeader);
+    return instance;
+}
 
 export async function getArtistesByDate() {
     return await pb.collection("Artiste").getFullList({
@@ -71,6 +87,23 @@ export async function saveScene(data) {
     return await pb.collection("Scene").create(data);
 }
 
+// helper for creating new user records from server-side code
+export async function addNewUser(newUser) {
+    // expects object with email, password, passwordConfirm, name (optional)
+    if (!newUser || !newUser.email || !newUser.password || !newUser.passwordConfirm) {
+        throw new Error("Missing required user fields");
+    }
+
+    const record = await pb.collection("users").create({
+        email: newUser.email,
+        password: newUser.password,
+        passwordConfirm: newUser.passwordConfirm,
+        name: newUser.name || "",
+    });
+
+    return record;
+}
+
 export const PB_BASE_URL = "http://0.0.0.0:8090";
 
 /**
@@ -89,3 +122,6 @@ export function buildFileURL(collection, recordId, fileName, thumb) {
     return url;
 }
 
+export async function Userauth(login, mdp) {
+    return await pb.collection("users").authWithPassword(login, mdp);
+}

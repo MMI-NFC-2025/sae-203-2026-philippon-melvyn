@@ -9,6 +9,8 @@ let mode = "login";
 let errorMessage = "";
 let successMessage = "";
 
+import { addNewUser, getPBFromRequest } from "../js/backend.mjs";
+
 if (Astro.request.method === "POST") {
     const formData = await Astro.request.formData();
 
@@ -16,21 +18,17 @@ if (Astro.request.method === "POST") {
     const email = formData.get("email")?.toString() || "";
     const password = formData.get("password")?.toString() || "";
     const passwordConfirm = formData.get("passwordConfirm")?.toString() || "";
-
-    const pb = new PocketBase("https://sae203.melvyn-philippon.fr");
+    const name = formData.get("name")?.toString() || "";
 
     try {
         if (mode === "register") {
-            await pb.collection("users").create({
-                email,
-                password,
-                passwordConfirm,
-            });
+            await addNewUser({ email, password, passwordConfirm, name });
 
             successMessage =
                 "Compte créé avec succès. Vous pouvez maintenant vous connecter.";
             mode = "login";
-        } else {
+        } else if (mode === "login") {
+            const pb = getPBFromRequest(Astro.request);
             await pb.collection("users").authWithPassword(email, password);
 
             Astro.cookies.set("pb_auth", pb.authStore.exportToCookie(), {
@@ -38,6 +36,7 @@ if (Astro.request.method === "POST") {
                 httpOnly: true,
                 secure: true,
                 sameSite: "lax",
+                maxAge: 60 * 60 * 24 * 7, 
             });
 
             return Astro.redirect("/");
@@ -57,11 +56,11 @@ if (Astro.request.method === "POST") {
                     class="rounded-3xl border border-blue-300/30 bg-white p-8 shadow-lg lg:p-10"
                 >
                     <div class="mb-8 text-center">
-                        <h1 class="text-text">
+                        <h1 class="text-text" id="formTitle">
                             {mode === "login" ? "Connexion" : "Inscription"}
                         </h1>
 
-                        <p class="mt-2 text-text-muted">
+                        <p class="mt-2 text-text-muted" id="formSubtitle">
                             {
                                 mode === "login"
                                     ? "Connectez-vous à votre espace."
@@ -86,8 +85,13 @@ if (Astro.request.method === "POST") {
                         )
                     }
 
-                    <form method="POST" class="space-y-5">
-                        <input type="hidden" name="mode" value={mode} />
+                    <form method="POST" class="space-y-5" id="authForm">
+                        <input
+                            type="hidden"
+                            name="mode"
+                            id="modeInput"
+                            value={mode}
+                        />
 
                         <div>
                             <label
@@ -121,29 +125,28 @@ if (Astro.request.method === "POST") {
                             />
                         </div>
 
-                        {
-                            mode === "register" && (
-                                <div>
-                                    <label
-                                        for="passwordConfirm"
-                                        class="mb-2 block text-sm font-semibold text-text"
-                                    >
-                                        Confirmer le mot de passe
-                                    </label>
-                                    <input
-                                        id="passwordConfirm"
-                                        name="passwordConfirm"
-                                        type="password"
-                                        required
-                                        class="w-full rounded-2xl border border-blue-300/40 px-4 py-3"
-                                    />
-                                </div>
-                            )
-                        }
+                        <div
+                            id="passwordConfirmContainer"
+                            style={mode === "register" ? "" : "display: none;"}
+                        >
+                            <label
+                                for="passwordConfirm"
+                                class="mb-2 block text-sm font-semibold text-text"
+                            >
+                                Confirmer le mot de passe
+                            </label>
+                            <input
+                                id="passwordConfirm"
+                                name="passwordConfirm"
+                                type="password"
+                                class="w-full rounded-2xl border border-blue-300/40 px-4 py-3"
+                            />
+                        </div>
 
                         <button
                             type="submit"
                             class="w-full rounded-full bg-blue-500 px-8 py-4 font-semibold text-white transition hover:bg-coral-400"
+                            id="submitBtn"
                         >
                             {
                                 mode === "login"
@@ -154,26 +157,55 @@ if (Astro.request.method === "POST") {
                     </form>
 
                     <div class="mt-6 text-center">
-                        {
-                            mode === "login" ? (
-                                <a
-                                    href="/connexion?mode=register"
-                                    class="text-sm font-semibold text-blue-500 no-underline hover:text-coral-400"
-                                >
-                                    Créer un compte
-                                </a>
-                            ) : (
-                                <a
-                                    href="/connexion"
-                                    class="text-sm font-semibold text-blue-500 no-underline hover:text-coral-400"
-                                >
-                                    Déjà un compte ? Se connecter
-                                </a>
-                            )
-                        }
+                        <button
+                            type="button"
+                            id="toggleModeBtn"
+                            class="text-sm font-semibold text-blue-500 no-underline hover:text-coral-400 bg-none border-none cursor-pointer"
+                        >
+                            {
+                                mode === "login"
+                                    ? "Créer un compte"
+                                    : "Déjà un compte ? Se connecter"
+                            }
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <script>
+        const modeInput = document.getElementById("modeInput");
+        const toggleBtn = document.getElementById("toggleModeBtn");
+        const formTitle = document.getElementById("formTitle");
+        const formSubtitle = document.getElementById("formSubtitle");
+        const submitBtn = document.getElementById("submitBtn");
+        const passwordConfirmContainer = document.getElementById(
+            "passwordConfirmContainer",
+        );
+        const passwordConfirmInput = document.getElementById("passwordConfirm");
+
+        toggleBtn.addEventListener("click", () => {
+            const currentMode = modeInput.value;
+            const newMode = currentMode === "login" ? "register" : "login";
+
+            modeInput.value = newMode;
+
+            if (newMode === "login") {
+                formTitle.textContent = "Connexion";
+                formSubtitle.textContent = "Connectez-vous à votre espace.";
+                submitBtn.textContent = "Se connecter";
+                toggleBtn.textContent = "Créer un compte";
+                passwordConfirmContainer.style.display = "none";
+                passwordConfirmInput.required = false;
+            } else {
+                formTitle.textContent = "Inscription";
+                formSubtitle.textContent = "Créez votre compte utilisateur.";
+                submitBtn.textContent = "Créer un compte";
+                toggleBtn.textContent = "Déjà un compte ? Se connecter";
+                passwordConfirmContainer.style.display = "block";
+                passwordConfirmInput.required = true;
+            }
+        });
+    </script>
 </Layout>

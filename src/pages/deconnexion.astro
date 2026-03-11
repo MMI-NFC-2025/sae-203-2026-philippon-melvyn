@@ -1,0 +1,16 @@
+---
+import { getPBFromRequest } from "../js/backend.mjs";
+
+const pb = getPBFromRequest(Astro.request);
+pb.authStore.clear();
+
+Astro.cookies.set("pb_auth", "", {
+    path: "/",
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+    maxAge: 0,
+});
+
+return Astro.redirect("/");
+---
