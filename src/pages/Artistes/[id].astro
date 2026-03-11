@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import ImagePB from "../../components/ImagePB.astro";
 import {
+    getArtisteSceneById,
     getArtisteById,
     getArtistesAlphabetique,
     buildFileURL,
@@ -11,6 +12,7 @@ const { id } = Astro.params;
 
 const artiste = await getArtisteById(id);
 const allArtistes = await getArtistesAlphabetique();
+const artisteWithScene = await getArtisteSceneById(id);
 
 if (!artiste) {
     return Astro.redirect("/artistes");
@@ -51,7 +53,7 @@ const genres = Array.isArray(artiste.genre_musical)
       ? [artiste.genre_musical]
       : [];
 
-const sceneName = artiste.expand?.production?.nom || "Scène non renseignée";
+const sceneName = artisteWithScene.expand?.scene?.nom || "Scène non renseignée";
 
 const similarArtistes = allArtistes
     .filter((item) => item.id !== artiste.id)
@@ -99,94 +101,49 @@ const similarArtistes = allArtistes
                 <div
                     class="rounded-4xl border border-blue-300/20 bg-blue-300/80 p-6 shadow-xl backdrop-blur-md lg:p-8"
                 >
-                    <div class="lg:grid lg:grid-cols-12 lg:gap-8">
-                        <div class="lg:col-span-8">
-                            <h1 class="text-white">{pageTitle}</h1>
+                    <div class="max-w-4xl">
+                        <h1 class="text-white">{pageTitle}</h1>
 
-                            <div class="mt-5 flex flex-wrap gap-3">
-                                {
-                                    dateLabel && (
-                                        <span class="rounded-full bg-white/70 px-4 py-2 text-sm font-semibold text-text">
-                                            {dateLabel}
-                                        </span>
-                                    )
-                                }
-
-                                {
-                                    hourLabel && (
-                                        <span class="rounded-full bg-white/70 px-4 py-2 text-sm font-semibold text-text">
-                                            {hourLabel}
-                                        </span>
-                                    )
-                                }
-                            </div>
-
-                            <div class="mt-5">
-                                <p class="font-semibold text-white">
-                                    {sceneName}
-                                </p>
-                            </div>
-
+                        <div class="mt-5 flex flex-wrap gap-3">
                             {
-                                genres.length > 0 && (
-                                    <div class="mt-5 flex flex-wrap gap-2">
-                                        {genres.map((genre) => (
-                                            <span class="rounded-full bg-white/60 px-3 py-1 text-sm text-text">
-                                                {genre}
-                                            </span>
-                                        ))}
-                                    </div>
+                                dateLabel && (
+                                    <span class="rounded-full bg-white/70 px-4 py-2 text-sm font-semibold text-text">
+                                        {dateLabel}
+                                    </span>
                                 )
                             }
 
-                            <div class="mt-6 max-w-3xl">
-                                <p class="text-white/95">
-                                    {artiste.description}
-                                </p>
-                            </div>
+                            {
+                                hourLabel && (
+                                    <span class="rounded-full bg-white/70 px-4 py-2 text-sm font-semibold text-text">
+                                        {hourLabel}
+                                    </span>
+                                )
+                            }
+
+                            <span
+                                class="rounded-full bg-white/70 px-4 py-2 text-sm font-semibold text-text"
+                            >
+                                {sceneName}
+                            </span>
                         </div>
 
-                        <div class="mt-8 lg:col-span-4 lg:mt-0">
-                            <div class="grid grid-cols-3 gap-3">
-                                <div
-                                    class="rounded-2xl border border-blue-500/20 bg-white p-4 text-center shadow-sm"
-                                >
-                                    <p
-                                        class="text-3xl font-semibold text-blue-500"
-                                    >
-                                        1
-                                    </p>
-                                    <p class="mt-1 text-sm text-text-muted">
-                                        Date
-                                    </p>
+                        {
+                            genres.length > 0 && (
+                                <div class="mt-5 flex flex-wrap gap-2">
+                                    {genres.map((genre) => (
+                                        <span class="rounded-full bg-white/60 px-3 py-1 text-sm text-text">
+                                            {genre}
+                                        </span>
+                                    ))}
                                 </div>
+                            )
+                        }
 
-                                <div
-                                    class="rounded-2xl border border-blue-500/20 bg-white p-4 text-center shadow-sm"
-                                >
-                                    <p
-                                        class="text-3xl font-semibold text-blue-500"
-                                    >
-                                        {genres.length || 1}
-                                    </p>
-                                    <p class="mt-1 text-sm text-text-muted">
-                                        Genres
-                                    </p>
-                                </div>
-
-                                <div
-                                    class="rounded-2xl border border-blue-500/20 bg-white p-4 text-center shadow-sm"
-                                >
-                                    <p
-                                        class="text-3xl font-semibold text-blue-500"
-                                    >
-                                        1
-                                    </p>
-                                    <p class="mt-1 text-sm text-text-muted">
-                                        Scène
-                                    </p>
-                                </div>
-                            </div>
+                        <div class="mt-6 max-w-3xl">
+                            <p class="text-white/95">
+                                {artiste.description}
+                            </p>
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
 import PocketBase from "pocketbase";
 
-export const pb = new PocketBase("http://0.0.0.0:8090");
+export const pb = new PocketBase("https://sae203.melvyn-philippon.fr");
 pb.autoCancellation(false);
 
 /**
@@ -12,7 +12,7 @@ pb.autoCancellation(false);
  * @returns {import("pocketbase").PocketBase}
  */
 export function getPBFromRequest(request) {
-    const instance = new PocketBase("http://0.0.0.0:8090");
+    const instance = new PocketBase("https://sae203.melvyn-philippon.fr");
     instance.autoCancellation(false);
 
     const cookieHeader = request.headers.get("cookie") || "";
@@ -104,7 +104,7 @@ export async function addNewUser(newUser) {
     return record;
 }
 
-export const PB_BASE_URL = "http://0.0.0.0:8090";
+export const PB_BASE_URL = "https://sae203.melvyn-philippon.fr";
 
 /**
  * Build a PocketBase file URL for a given collection/record.
@@ -124,4 +124,10 @@ export function buildFileURL(collection, recordId, fileName, thumb) {
 
 export async function Userauth(login, mdp) {
     return await pb.collection("users").authWithPassword(login, mdp);
+}
+
+export async function getArtisteSceneById(id) {
+    return await pb.collection("Artiste").getOne(id, {
+        expand: "scene"
+    });
 }

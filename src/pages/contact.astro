@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
 import Hero from "../components/Hero.astro";
 import PictureHero from "../components/Picture.astro";
@@ -22,8 +23,6 @@ import IconLinkedin from "../assets/icones/icon_linkedin.svg";
 >
     <Hero title="Contact" subTitle="Une question ? Contactez-nous">
         <PictureHero slot="image" src={heroImage} alt="Ambiance du festival" />
-
-        
     </Hero>
 
     <section class="bg-white py-16 lg:py-24">
@@ -36,7 +35,11 @@ import IconLinkedin from "../assets/icones/icon_linkedin.svg";
                         >
                             <div class="mb-8 flex items-center gap-3">
                                 <span class="text-coral-400">
-                                    <IconEnvoyer class="h-6 w-6" />
+                                    <Image
+                                        src={IconEnvoyer}
+                                        alt="Envoyer"
+                                        class="h-6 w-6"
+                                    />
                                 </span>
                                 <h2 class="text-text">
                                     Envoyez-nous un message
@@ -112,7 +115,11 @@ import IconLinkedin from "../assets/icones/icon_linkedin.svg";
                                     type="submit"
                                     class="inline-flex w-full items-center justify-center gap-3 rounded-2xl bg-blue-500 px-6 py-4 text-base font-semibold text-white transition hover:bg-coral-400"
                                 >
-                                    <IconEnvoyer class="h-5 w-5" />
+                                    <Image
+                                        src={IconEnvoyer}
+                                        alt="Envoyer"
+                                        class="h-5 w-5"
+                                    />
                                     Envoyer le message
                                 </button>
                             </form>
@@ -125,7 +132,11 @@ import IconLinkedin from "../assets/icones/icon_linkedin.svg";
                         >
                             <div class="mb-8 flex items-center gap-3">
                                 <span class="text-coral-400">
-                                    <IconMail class="h-6 w-6" />
+                                    <Image
+                                        src={IconMail}
+                                        alt="Mail"
+                                        class="h-6 w-6"
+                                    />
                                 </span>
                                 <h2 class="text-text">Nos coordonnées</h2>
                             </div>
@@ -134,7 +145,11 @@ import IconLinkedin from "../assets/icones/icon_linkedin.svg";
                                 <article class="rounded-2xl bg-blue-300/10 p-5">
                                     <div class="flex items-start gap-4">
                                         <span class="text-coral-400">
-                                            <IconMail class="h-6 w-6" />
+                                            <Image
+                                                src={IconMail}
+                                                alt="Mail"
+                                                class="h-6 w-6"
+                                            />
                                         </span>
 
                                         <div>
@@ -154,7 +169,11 @@ import IconLinkedin from "../assets/icones/icon_linkedin.svg";
                                 <article class="rounded-2xl bg-blue-300/10 p-5">
                                     <div class="flex items-start gap-4">
                                         <span class="text-coral-400">
-                                            <IconTelephone class="h-6 w-6" />
+                                            <Image
+                                                src={IconTelephone}
+                                                alt="Téléphone"
+                                                class="h-6 w-6"
+                                            />
                                         </span>
 
                                         <div>
@@ -174,7 +193,11 @@ import IconLinkedin from "../assets/icones/icon_linkedin.svg";
                                 <article class="rounded-2xl bg-blue-300/10 p-5">
                                     <div class="flex items-start gap-4">
                                         <span class="text-coral-400">
-                                            <IconLocalisation class="h-6 w-6" />
+                                            <Image
+                                                src={IconLocalisation}
+                                                alt="Adresse"
+                                                class="h-6 w-6"
+                                            />
                                         </span>
 
                                         <div>
@@ -203,7 +226,11 @@ import IconLinkedin from "../assets/icones/icon_linkedin.svg";
                                     href="#"
                                     class="flex items-center gap-3 rounded-2xl bg-blue-500 p-5 text-white no-underline transition hover:bg-coral-400"
                                 >
-                                    <IconFacebook class="h-5 w-5" />
+                                    <Image
+                                        src={IconFacebook}
+                                        alt="Facebook"
+                                        class="h-5 w-5"
+                                    />
                                     <span class="font-semibold">Facebook</span>
                                 </a>
 
@@ -211,7 +238,11 @@ import IconLinkedin from "../assets/icones/icon_linkedin.svg";
                                     href="#"
                                     class="flex items-center gap-3 rounded-2xl bg-blue-500 p-5 text-white no-underline transition hover:bg-coral-400"
                                 >
-                                    <IconDiscord class="h-5 w-5" />
+                                    <Image
+                                        src={IconDiscord}
+                                        alt="Discord"
+                                        class="h-5 w-5"
+                                    />
                                     <span class="font-semibold">Discord</span>
                                 </a>
 
@@ -219,7 +250,11 @@ import IconLinkedin from "../assets/icones/icon_linkedin.svg";
                                     href="#"
                                     class="flex items-center gap-3 rounded-2xl bg-blue-500 p-5 text-white no-underline transition hover:bg-coral-400"
                                 >
-                                    <IconLinkedin class="h-5 w-5" />
+                                    <Image
+                                        src={IconLinkedin}
+                                        alt="LinkedIn"
+                                        class="h-5 w-5"
+                                    />
                                     <span class="font-semibold">LinkedIn</span>
                                 </a>
 
@@ -227,7 +262,11 @@ import IconLinkedin from "../assets/icones/icon_linkedin.svg";
                                     href="#"
                                     class="flex items-center gap-3 rounded-2xl bg-blue-500 p-5 text-white no-underline transition hover:bg-coral-400"
                                 >
-                                    <IconInstagram class="h-5 w-5" />
+                                    <Image
+                                        src={IconInstagram}
+                                        alt="Instagram"
+                                        class="h-5 w-5"
+                                    />
                                     <span class="font-semibold">Instagram</span>
                                 </a>
                             </div>

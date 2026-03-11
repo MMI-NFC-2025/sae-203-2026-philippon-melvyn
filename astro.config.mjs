@@ -1,11 +1,10 @@
-// @ts-check
+
 import { defineConfig } from 'astro/config';
 
 import tailwindcss from '@tailwindcss/vite';
 
 import netlify from '@astrojs/netlify';
 
-// https://astro.build/config
 export default defineConfig({
   output: 'server',
 
@@ -14,21 +13,16 @@ export default defineConfig({
   },
 
   adapter: netlify({
-    imageCDN: false,
+    imageCDN: false, // Active l'optimisation d'images via Netlify Image Transform
+    edge: true // Active le déploiement sur le réseau Edge de Netlify pour des performances optimales
   }),
 
-  image: {
-    remotePatterns: [
-      {
-        protocol: "http",
-        hostname: "localhost",
-        port: "8090"
-      },
-      {
-        protocol: "http",
-        hostname: "0.0.0.0",
-        port: "8090"
-      }
-    ]
-  }
-});
+    image: {
+      remotePatterns: [
+        {
+          protocol: "https",
+          hostname: "sae203.melvyn-philippon.fr"
+        }
+      ]
+    }
+  });

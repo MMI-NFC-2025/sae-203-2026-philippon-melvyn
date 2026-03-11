@@ -1,5 +1,6 @@
 ---
-import Logo from "../assets/icones/Logo.svg";
+import { Image } from "astro:assets";
+import Logo from "../assets/icones/logo.svg";
 
 import Instagram from "../assets/icones/icon_instagram.svg";
 import Discord from "../assets/icones/icon_discord.svg";
@@ -13,7 +14,11 @@ import Linkedin from "../assets/icones/icon_linkedin.svg";
     >
         <div class="lg:col-span-5">
             <a href="/" aria-label="Accueil">
-                <Logo class="h-14 w-auto brightness-0 invert" />
+                <Image
+                    src={Logo}
+                    alt="Logo Les Rives du Territoire"
+                    class="h-14 w-auto brightness-0 invert"
+                />
             </a>
 
             <p class="mt-5 max-w-md text-sm leading-relaxed text-white">
@@ -80,7 +85,7 @@ import Linkedin from "../assets/icones/icon_linkedin.svg";
                     aria-label="Instagram"
                     class="flex h-10 w-10 items-center justify-center rounded-md bg-white/10 text-white transition hover:bg-white/20"
                 >
-                    <Instagram class="h-5 w-5" />
+                    <Image src={Instagram} alt="Instagram" class="h-5 w-5" />
                 </a>
 
                 <a
@@ -88,7 +93,7 @@ import Linkedin from "../assets/icones/icon_linkedin.svg";
                     aria-label="Discord"
                     class="flex h-10 w-10 items-center justify-center rounded-md bg-white/10 text-white transition hover:bg-white/20"
                 >
-                    <Discord class="h-5 w-5" />
+                    <Image src={Discord} alt="Discord" class="h-5 w-5" />
                 </a>
 
                 <a
@@ -96,7 +101,7 @@ import Linkedin from "../assets/icones/icon_linkedin.svg";
                     aria-label="Facebook"
                     class="flex h-10 w-10 items-center justify-center rounded-md bg-white/10 text-white transition hover:bg-white/20"
                 >
-                    <Facebook class="h-5 w-5" />
+                    <Image src={Facebook} alt="Facebook" class="h-5 w-5" />
                 </a>
 
                 <a
@@ -104,7 +109,7 @@ import Linkedin from "../assets/icones/icon_linkedin.svg";
                     aria-label="LinkedIn"
                     class="flex h-10 w-10 items-center justify-center rounded-md bg-white/10 text-white transition hover:bg-white/20"
                 >
-                    <Linkedin class="h-5 w-5" />
+                    <Image src={Linkedin} alt="LinkedIn" class="h-5 w-5" />
                 </a>
             </div>
         </div>
