@@ -3,7 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import Hero from "../components/Hero.astro";
 import PictureHero from "../components/Picture.astro";
 
-import heroImage from "../assets/img/hero_apropos2.avif";
+import heroImage from "../assets/img/hero_contact.jpg";
 
 import IconMail from "../assets/icones/mail.svg";
 import IconTelephone from "../assets/icones/telephone.svg";
@@ -23,16 +23,7 @@ import IconLinkedin from "../assets/icones/icon_linkedin.svg";
     <Hero title="Contact" subTitle="Une question ? Contactez-nous">
         <PictureHero slot="image" src={heroImage} alt="Ambiance du festival" />
 
-        <div slot="chapo" class="space-y-5">
-            <p class="text-text">
-                Une demande, une question ou un besoin d’information sur le
-                festival ?
-            </p>
-
-            <p class="text-text-muted">
-                Notre équipe vous répond dans les meilleurs délais.
-            </p>
-        </div>
+        
     </Hero>
 
     <section class="bg-white py-16 lg:py-24">

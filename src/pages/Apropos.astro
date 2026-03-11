@@ -4,15 +4,16 @@ import Hero from "../components/Hero.astro";
 import PictureHero from "../components/Picture.astro";
 import Carousel from "../components/Carrousel.astro";
 
-import heroImage from "../assets/img/hero_apropos2.avif";
+import heroImage from "../assets/img/hero_apropos.avif";
 
 import avatar1 from "../assets/img/avatar1.webp";
 import avatar2 from "../assets/img/avatar2.webp";
 import avatar3 from "../assets/img/avatar3.webp";
 
-import galerie1 from "../assets/img/hero_apropos2.avif";
-import galerie2 from "../assets/img/hero_apropos2.avif";
-import galerie3 from "../assets/img/hero_apropos2.avif";
+import carrousel_apropos1 from "../assets/img/carrousel_apropos4.jpg";
+import carrousel_apropos2 from "../assets/img/carrousel_apropos3.jpg";
+import carrousel_apropos3 from "../assets/img/carrousel_apropos2.jpg";
+import carrousel_apropos4 from "../assets/img/carrousel_apropos1.jpg";
 ---
 
 <Layout
@@ -259,15 +260,19 @@ import galerie3 from "../assets/img/hero_apropos2.avif";
                     <div class="mt-8 lg:col-span-9 lg:mt-0">
                         <Carousel
                             images={[
-                                { src: galerie1.src, alt: "Scène du festival" },
+                                { src: carrousel_apropos1.src, alt: "Scène du festival" },
                                 {
-                                    src: galerie2.src,
+                                    src: carrousel_apropos2.src,
                                     alt: "Concert au festival",
                                 },
                                 {
-                                    src: galerie3.src,
+                                    src: carrousel_apropos3.src,
                                     alt: "Ambiance du public",
                                 },
+                                {
+                                    src: carrousel_apropos4.src,
+                                    alt: "Activités du festival",
+                                }
                             ]}
                         />
                     </div>

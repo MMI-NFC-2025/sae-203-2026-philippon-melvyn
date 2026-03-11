@@ -1,0 +1,47 @@
+---
+import { Picture } from "astro:assets";
+
+interface Props {
+    src?: string;
+    alt?: string;
+    classPicture?: string;
+    classImg?: string;
+    layout?: "constrained" | "full-width" | "fixed" | "none";
+    formats?: string[];
+    thumb?: string; 
+}
+
+const {
+    src,
+    alt = "",
+    classPicture = "",
+    classImg = "",
+    layout = "constrained",
+    formats = ["avif", "webp"],
+} = Astro.props as Props;
+
+const VALID_LAYOUTS: Props["layout"][] = [
+    "constrained",
+    "full-width",
+    "fixed",
+    "none",
+];
+
+const resolvedLayout: Props["layout"] = VALID_LAYOUTS.includes(layout)
+    ? layout
+    : "constrained";
+---
+
+{
+    src && (
+        <Picture
+            src={src}
+            alt={alt}
+            layout={resolvedLayout}
+            pictureAttributes={{ class: classPicture }}
+            class={classImg}
+            inferSize={true}
+            formats={formats}
+        />
+    )
+}

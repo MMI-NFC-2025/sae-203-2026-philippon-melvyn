@@ -1,0 +1,47 @@
+---
+import { buildFileURL } from "../js/backend.mjs";
+import ImagePB from "./ImagePB.astro";
+
+const { artiste } = Astro.props;
+
+const photoUrl = artiste.photo
+    ? buildFileURL("Artiste", artiste.id, artiste.photo)
+    : null;
+
+const genres = Array.isArray(artiste.genre_musical)
+    ? artiste.genre_musical
+    : artiste.genre_musical
+      ? [artiste.genre_musical]
+      : [];
+
+const genreLabel = genres.slice(0, 2).join(" • ");
+---
+
+<article class="text-center">
+    <a href={`/artistes/${artiste.id}`} class="block no-underline">
+        <div
+            class="aspect-square overflow-hidden rounded-3xl shadow-lg transition duration-300 hover:-translate-y-1"
+        >
+            {
+                photoUrl ? (
+                    <ImagePB
+                        src={photoUrl}
+                        alt={artiste.nom}
+                        thumb="1024x1024"
+                        classImg="h-full w-full object-cover"
+                    />
+                ) : (
+                    <div class="h-full w-full bg-blue-300/30" />
+                )
+            }
+        </div>
+
+        <h3 class="mt-4 text-xl text-text">
+            {artiste.nom}
+        </h3>
+
+        <p class="mt-1 text-text-muted">
+            {genreLabel}
+        </p>
+    </a>
+</article>

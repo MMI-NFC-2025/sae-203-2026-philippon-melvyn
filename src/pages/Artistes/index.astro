@@ -68,7 +68,7 @@ const makeUrl = (next: { q?: string; sort?: string; day?: string } = {}) => {
     if (finalDay !== "all") params.set("day", finalDay);
 
     const search = params.toString();
-    return search ? `/Artistes?${search}` : "/Artistes";
+    return search ? `/artistes?${search}` : "/artistes";
 };
 ---
 

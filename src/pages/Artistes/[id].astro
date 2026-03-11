@@ -1,9 +1,10 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import ImagePB from "../../components/ImagePB.astro";
 import {
     getArtisteById,
     getArtistesAlphabetique,
-    pb,
+    buildFileURL,
 } from "../../js/backend.mjs";
 
 const { id } = Astro.params;
@@ -21,14 +22,9 @@ const description =
     artiste.description ||
     `Découvrez ${artiste.nom}, artiste programmé au festival Les Rives du Territoire.`;
 
-const photoUrl = artiste.photo ? pb.files.getURL(artiste, artiste.photo) : null;
-
-const galerieUrls = Array.isArray(artiste.galerie)
-    ? artiste.galerie.map((file) => ({
-          src: pb.files.getURL(artiste, file),
-          alt: `${artiste.nom} - galerie`,
-      }))
-    : [];
+const photoUrl = artiste.photo
+    ? buildFileURL("Artiste", artiste.id, artiste.photo)
+    : null;
 
 const dateObj = artiste.date_de_presentation
     ? new Date(artiste.date_de_presentation)
@@ -77,10 +73,12 @@ const similarArtistes = allArtistes
             <div class="h-[42vh] w-full lg:h-[62vh]">
                 {
                     photoUrl ? (
-                        <img
+                        <ImagePB
                             src={photoUrl}
                             alt={artiste.nom}
-                            class="h-full w-full object-cover"
+                            layout="full-width"
+                            classPicture="absolute inset-0"
+                            classImg="h-full w-full object-cover"
                         />
                     ) : (
                         <div class="h-full w-full bg-blue-300/30" />
@@ -202,15 +200,25 @@ const similarArtistes = allArtistes
 
                     <div class="mt-6 lg:col-span-9 lg:mt-0">
                         {
-                            galerieUrls.length > 0 ? (
+                            Array.isArray(artiste.galerie) &&
+                            artiste.galerie.length > 0 ? (
                                 <div class="grid grid-cols-2 gap-4 lg:grid-cols-3">
-                                    {galerieUrls.map((image) => (
-                                        <img
-                                            src={image.src}
-                                            alt={image.alt}
-                                            class="aspect-square w-full rounded-3xl object-cover shadow-sm"
-                                        />
-                                    ))}
+                                    {artiste.galerie.map((file) => {
+                                        const galleryUrl =
+                                            buildFileURL(
+                                                "Artiste",
+                                                artiste.id,
+                                                file,
+                                            ) || "";
+                                        return (
+                                            <ImagePB
+                                                src={galleryUrl}
+                                                alt={`${artiste.nom} - galerie`}
+                                                thumb="1024x1024"
+                                                classImg="aspect-square w-full rounded-3xl object-cover shadow-sm"
+                                            />
+                                        );
+                                    })}
                                 </div>
                             ) : (
                                 <div class="rounded-3xl border border-blue-300/20 bg-white p-6 shadow-sm">
@@ -236,10 +244,6 @@ const similarArtistes = allArtistes
                             similarArtistes.length > 0 ? (
                                 <div class="grid grid-cols-2 gap-4 lg:grid-cols-3">
                                     {similarArtistes.map((item) => {
-                                        const itemPhoto = item.photo
-                                            ? pb.files.getURL(item, item.photo)
-                                            : null;
-
                                         const itemGenres = Array.isArray(
                                             item.genre_musical,
                                         )
@@ -248,16 +252,25 @@ const similarArtistes = allArtistes
                                               ? [item.genre_musical]
                                               : [];
 
+                                        const itemPhotoUrl = item.photo
+                                            ? buildFileURL(
+                                                  "Artiste",
+                                                  item.id,
+                                                  item.photo,
+                                              ) || ""
+                                            : "";
+
                                         return (
                                             <a
                                                 href={`/artistes/${item.id}`}
                                                 class="block rounded-3xl border border-blue-300/20 bg-white p-3 no-underline shadow-sm transition duration-300 hover:-translate-y-1 hover:border-coral-400"
                                             >
-                                                {itemPhoto ? (
-                                                    <img
-                                                        src={itemPhoto}
+                                                {itemPhotoUrl ? (
+                                                    <ImagePB
+                                                        src={itemPhotoUrl}
                                                         alt={item.nom}
-                                                        class="aspect-square w-full rounded-2xl object-cover"
+                                                        thumb="1024x1024"
+                                                        classImg="aspect-square w-full rounded-2xl object-cover"
                                                     />
                                                 ) : (
                                                     <div class="aspect-square w-full rounded-2xl bg-blue-300/20" />

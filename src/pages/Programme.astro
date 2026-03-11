@@ -1,24 +1,347 @@
 ---
-import PictureHero from "../components/Picture.astro";
 import Layout from "../layouts/Layout.astro";
 import Hero from "../components/Hero.astro";
-import imgHero from "../assets/img/hero_apropos2.avif";
+import PictureHero from "../components/Picture.astro";
+import ProgrammeCard from "../components/ProgrammeCard.astro";
+import { getArtistesByDate } from "../js/backend.mjs";
 
-const seotitle = "Programme | Festival Les Rives du Territoire";
-const pagetitle = "Programme ";
+import heroImage from "../assets/img/hero_programme.jpg";
+
+const seoTitle = "Programme | Les Rives du Territoire";
+const pageTitle = "Programme";
 const subTitle = "Tous les concerts et représentations du festival";
 const description =
-    "Consultez le programme complet du festival Les Rives du Territoire à Belfort. Découvrez les artistes, les scènes et les horaires des concerts du 20 au 23 décembre 2026.";
+    "Consultez le programme complet du festival Les Rives du Territoire, du 20 au 23 décembre 2026.";
+
+const url = new URL(Astro.request.url);
+
+const selectedGenre = url.searchParams.get("genre") || "all";
+const selectedScene = url.searchParams.get("scene") || "all";
+const selectedDay = url.searchParams.get("day") || "all";
+
+const artistesRaw = await getArtistesByDate();
+
+const normalize = (value: string): string =>
+    value
+        ?.toString()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase() || "";
+
+const getLocalDateOnly = (dateString: string): string => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+};
+
+const getHourMinute = (dateString: string): string => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    const h = String(date.getHours()).padStart(2, "0");
+    const m = String(date.getMinutes()).padStart(2, "0");
+    return `${h}:${m}`;
+};
+
+const getEndHourMinute = (dateString: string): string => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    date.setMinutes(date.getMinutes() + 60);
+    const h = String(date.getHours()).padStart(2, "0");
+    const m = String(date.getMinutes()).padStart(2, "0");
+    return `${h}:${m}`;
+};
+
+const formatDayLabel = (dateString: string): string => {
+    if (!dateString) return "";
+    return new Date(dateString).toLocaleDateString("fr-FR", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+    });
+};
+
+const allGenres = [
+    ...new Set(
+        artistesRaw.flatMap((artiste) =>
+            Array.isArray(artiste.genre_musical)
+                ? artiste.genre_musical
+                : artiste.genre_musical
+                  ? [artiste.genre_musical]
+                  : [],
+        ),
+    ),
+].sort((a, b) => a.localeCompare(b, "fr"));
+
+const allScenes = [
+    ...new Set(
+        artistesRaw
+            .map((artiste) => artiste.expand?.production?.nom)
+            .filter(Boolean),
+    ),
+].sort((a, b) => a.localeCompare(b, "fr"));
+
+let artistes = artistesRaw.filter((artiste) => {
+    const genres = Array.isArray(artiste.genre_musical)
+        ? artiste.genre_musical
+        : artiste.genre_musical
+          ? [artiste.genre_musical]
+          : [];
+
+    const sceneName = artiste.expand?.production?.nom || "";
+    const artisteDay = getLocalDateOnly(artiste.date_de_presentation);
+
+    const matchGenre =
+        selectedGenre === "all" ||
+        genres.some((genre) => normalize(genre) === normalize(selectedGenre));
+
+    const matchScene =
+        selectedScene === "all" ||
+        normalize(sceneName) === normalize(selectedScene);
+
+    const matchDay = selectedDay === "all" || artisteDay === selectedDay;
+
+    return matchGenre && matchScene && matchDay;
+});
+
+artistes.sort(
+    (a, b) =>
+        new Date(a.date_de_presentation).getTime() -
+        new Date(b.date_de_presentation).getTime(),
+);
+
+const groupedBySlot = artistes.reduce((acc: Record<string, any>, artiste) => {
+    const start = getHourMinute(artiste.date_de_presentation);
+    const end = getEndHourMinute(artiste.date_de_presentation);
+    const slot = `${start} - ${end}`;
+
+    if (!acc[slot]) acc[slot] = [];
+    acc[slot].push(artiste);
+
+    return acc;
+}, {});
+
+const slots = Object.entries(groupedBySlot);
+
+const makeUrl = (next: Record<string, any> = {}) => {
+    const params = new URLSearchParams();
+
+    const finalGenre = next.genre ?? selectedGenre;
+    const finalScene = next.scene ?? selectedScene;
+    const finalDay = next.day ?? selectedDay;
+
+    if (finalGenre !== "all") params.set("genre", finalGenre);
+    if (finalScene !== "all") params.set("scene", finalScene);
+    if (finalDay !== "all") params.set("day", finalDay);
+
+    const search = params.toString();
+    return search
+        ? `/programme?${search}#programme-content`
+        : "/programme#programme-content";
+};
 ---
 
-<Layout title={seotitle} description={description}>
-    <Hero title={pagetitle} subTitle={subTitle}>
-        <PictureHero
-            slot="image"
-            src={imgHero}
-            alt="Violoncelles"
-            layout="full-width"
-            pictureAttributes={{ class: "absolute inset-0 object-cover" }}
-        />
+<Layout title={seoTitle} description={description}>
+    <Hero title={pageTitle} subTitle={subTitle}>
+        <PictureHero slot="image" src={heroImage} alt="Ambiance du festival" />
     </Hero>
+
+    <section id="programme-content" class="bg-white py-16 lg:py-24">
+        <div class="grille">
+            <div class="col-span-4 lg:col-span-12">
+                <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+                    <div class="lg:col-span-3">
+                        <h1 class="text-text">Programme</h1>
+                        <p class="mt-3 text-text-muted">
+                            Découvrez tous les artistes et leurs horaires de
+                            passage.
+                        </p>
+                    </div>
+
+                    <div class="mt-8 lg:col-span-9 lg:mt-0">
+                        <form
+                            method="GET"
+                            action="/programme#programme-content"
+                            class="grid gap-3 rounded-[1.6rem] border border-blue-500/20 bg-white p-3 shadow-sm lg:grid-cols-2"
+                        >
+                            <input
+                                type="hidden"
+                                name="day"
+                                value={selectedDay}
+                            />
+
+                            <select
+                                name="genre"
+                                class="rounded-[1.2rem] border border-blue-300/30 bg-white px-4 py-3 text-text focus:border-blue-500 focus:outline-none"
+                            >
+                                <option
+                                    value="all"
+                                    selected={selectedGenre === "all"}
+                                >
+                                    Tous les genres
+                                </option>
+                                {
+                                    allGenres.map((genre) => (
+                                        <option
+                                            value={genre}
+                                            selected={selectedGenre === genre}
+                                        >
+                                            {genre}
+                                        </option>
+                                    ))
+                                }
+                            </select>
+
+                            <select
+                                name="scene"
+                                class="rounded-[1.2rem] border border-blue-300/30 bg-white px-4 py-3 text-text focus:border-blue-500 focus:outline-none"
+                            >
+                                <option
+                                    value="all"
+                                    selected={selectedScene === "all"}
+                                >
+                                    Toutes les scènes
+                                </option>
+                                {
+                                    allScenes.map((scene) => (
+                                        <option
+                                            value={scene}
+                                            selected={selectedScene === scene}
+                                        >
+                                            {scene}
+                                        </option>
+                                    ))
+                                }
+                            </select>
+
+                            <div class="lg:col-span-2">
+                                <button
+                                    type="submit"
+                                    class="w-full rounded-full bg-blue-500 px-6 py-3 font-semibold text-white transition hover:bg-coral-400"
+                                >
+                                    Appliquer les filtres
+                                </button>
+                            </div>
+                        </form>
+
+                        <div class="mt-6 flex flex-wrap gap-3">
+                            <a
+                                href={makeUrl({ day: "all" })}
+                                class:list={[
+                                    "rounded-full px-5 py-3 text-sm font-semibold no-underline transition",
+                                    selectedDay === "all"
+                                        ? "bg-blue-500 text-white"
+                                        : "bg-blue-300/20 text-text hover:bg-coral-400 hover:text-white",
+                                ]}
+                            >
+                                Tous
+                            </a>
+
+                            <a
+                                href={makeUrl({ day: "2026-12-20" })}
+                                class:list={[
+                                    "rounded-full px-5 py-3 text-sm font-semibold no-underline transition",
+                                    selectedDay === "2026-12-20"
+                                        ? "bg-blue-500 text-white"
+                                        : "bg-blue-300/20 text-text hover:bg-coral-400 hover:text-white",
+                                ]}
+                            >
+                                20 décembre
+                            </a>
+
+                            <a
+                                href={makeUrl({ day: "2026-12-21" })}
+                                class:list={[
+                                    "rounded-full px-5 py-3 text-sm font-semibold no-underline transition",
+                                    selectedDay === "2026-12-21"
+                                        ? "bg-blue-500 text-white"
+                                        : "bg-blue-300/20 text-text hover:bg-coral-400 hover:text-white",
+                                ]}
+                            >
+                                21 décembre
+                            </a>
+
+                            <a
+                                href={makeUrl({ day: "2026-12-22" })}
+                                class:list={[
+                                    "rounded-full px-5 py-3 text-sm font-semibold no-underline transition",
+                                    selectedDay === "2026-12-22"
+                                        ? "bg-blue-500 text-white"
+                                        : "bg-blue-300/20 text-text hover:bg-coral-400 hover:text-white",
+                                ]}
+                            >
+                                22 décembre
+                            </a>
+
+                            <a
+                                href={makeUrl({ day: "2026-12-23" })}
+                                class:list={[
+                                    "rounded-full px-5 py-3 text-sm font-semibold no-underline transition",
+                                    selectedDay === "2026-12-23"
+                                        ? "bg-blue-500 text-white"
+                                        : "bg-blue-300/20 text-text hover:bg-coral-400 hover:text-white",
+                                ]}
+                            >
+                                23 décembre
+                            </a>
+                        </div>
+
+                        <div class="mt-6">
+                            <a
+                                href="/programme.pdf"
+                                download="programme-les-rives-du-territoire.pdf"
+                                class="inline-flex w-full items-center justify-center rounded-[1.2rem] bg-blue-300 px-6 py-4 font-semibold text-text no-underline shadow-sm transition hover:bg-coral-400 hover:text-white"
+                            >
+                                Télécharger le programme PDF
+                            </a>
+                        </div>
+
+                        <div class="mt-10 space-y-8">
+                            {
+                                slots.length > 0 ? (
+                                    slots.map(([slot, items]) => (
+                                        <div class="space-y-4">
+                                            <div class="border-b border-blue-300/30 pb-3">
+                                                <p class="font-semibold text-text">
+                                                    {slot}
+                                                </p>
+                                                {items[0]
+                                                    ?.date_de_presentation && (
+                                                    <p class="mt-1 text-sm text-text-muted">
+                                                        {formatDayLabel(
+                                                            items[0]
+                                                                .date_de_presentation,
+                                                        )}
+                                                    </p>
+                                                )}
+                                            </div>
+
+                                            <div class="space-y-3">
+                                                {((items as any) || []).map(
+                                                    (artiste: any) => (
+                                                        <ProgrammeCard
+                                                            artiste={artiste}
+                                                        />
+                                                    ),
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div class="rounded-4xl border border-blue-300/30 bg-white p-6 shadow-sm">
+                                        <p class="text-text-muted">
+                                            Aucun concert ne correspond aux
+                                            filtres sélectionnés.
+                                        </p>
+                                    </div>
+                                )
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </Layout>

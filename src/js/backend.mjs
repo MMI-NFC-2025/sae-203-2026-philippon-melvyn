@@ -1,6 +1,6 @@
 import PocketBase from "pocketbase";
 
-export const pb = new PocketBase("https://sae203.melvyn-philippon.fr");
+export const pb = new PocketBase("http://0.0.0.0:8090");
 
 pb.autoCancellation(false);
 
@@ -36,9 +36,9 @@ export async function getSceneById(id) {
 
 export async function getArtistesBySceneId(sceneId) {
     return await pb.collection("Artiste").getFullList({
-        filter: `production="${sceneId}"`,
+        filter: `scene="${sceneId}"`,
         sort: "date_de_presentation",
-        expand: "production"
+        expand: "scene"
     });
 }
 
@@ -69,5 +69,23 @@ export async function saveScene(data) {
     }
 
     return await pb.collection("Scene").create(data);
+}
+
+export const PB_BASE_URL = "http://0.0.0.0:8090";
+
+/**
+ * Build a PocketBase file URL for a given collection/record.
+ * This avoids importing the `pb` object inside components.
+ * @param {string} collection - name of the collection (e.g. "Artiste")
+ * @param {string} recordId - ID of the record
+ * @param {string} fileName - filename stored in the record
+ * @param {string} [thumb] - optional thumbnail spec
+ * @returns {string|null}
+ */
+export function buildFileURL(collection, recordId, fileName, thumb) {
+    if (!collection || !recordId || !fileName) return null;
+    let url = `${PB_BASE_URL}/api/files/${collection}/${recordId}/${fileName}`;
+    if (thumb) url += `?thumb=${thumb}`;
+    return url;
 }
 

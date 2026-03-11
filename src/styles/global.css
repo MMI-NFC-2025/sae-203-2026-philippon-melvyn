@@ -104,7 +104,7 @@
     }
 
     header.bg-white #menu-btn[aria-expanded="false"]>span {
-        @apply bg-black !;
+        @apply bg-black;
     }
 
     header:not(.bg-white) button[aria-label="Recherche"]>svg>* {

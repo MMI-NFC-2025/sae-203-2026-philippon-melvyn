@@ -3,8 +3,14 @@ import Layout from "../layouts/Layout.astro";
 import Hero from "../components/Hero.astro";
 import PictureHero from "../components/Picture.astro";
 import Button from "../components/Button.astro";
+import CardArtisteAccueil from "../components/CardArtisteAccueil.astro";
 
-import imgHero from "../assets/img/hero_apropos2.avif";
+import imgHero from "../assets/img/hero_index.avif";
+
+import partenaire1 from "../assets/img/partenaire1.png";
+import partenaire2 from "../assets/img/partenaire 2.png";
+import partenaire3 from "../assets/img/partenaire 3.png";
+import partenaire4 from "../assets/img/partenaire 4.png";
 
 import { getArtistesByDate } from "../js/backend.mjs";
 
@@ -15,8 +21,19 @@ const description =
 	"Les Rives du Territoire est un festival de musique organisé à Belfort du 20 au 23 décembre 2026 avec des artistes sur plusieurs scènes.";
 
 const artistes = await getArtistesByDate();
+
+const now = new Date();
+
+const programmeAccueil = artistes
+	.filter((artiste) => artiste.date_de_presentation)
+	.sort(
+		(a, b) =>
+			new Date(a.date_de_presentation).getTime() -
+			new Date(b.date_de_presentation).getTime(),
+	)
+	.slice(0, 4);
+
 const artistesAccueil = artistes.slice(0, 4);
-const programmeAccueil = artistes.slice(0, 4);
 
 const infos = [
 	{
@@ -37,14 +54,7 @@ const infos = [
 	},
 ];
 
-const partenaires = [
-	"PARTENAIRE 1",
-	"PARTENAIRE 2",
-	"PARTENAIRE 3",
-	"PARTENAIRE 4",
-];
-
-function formatDateFR(dateString: string) {
+function formatDateFR(dateString: string): string {
 	if (!dateString) return "";
 	const date = new Date(dateString);
 
@@ -55,10 +65,14 @@ function formatDateFR(dateString: string) {
 	});
 }
 
-function getGenreLabel(genre: string | string[]) {
-	if (!genre) return "";
-	if (Array.isArray(genre)) return genre.join(" • ");
-	return genre;
+function formatHourFR(dateString: string): string {
+	if (!dateString) return "";
+	const date = new Date(dateString);
+
+	return date.toLocaleTimeString("fr-FR", {
+		hour: "2-digit",
+		minute: "2-digit",
+	});
 }
 ---
 
@@ -93,13 +107,13 @@ function getGenreLabel(genre: string | string[]) {
 								{formatDateFR(artiste.date_de_presentation)}
 							</p>
 
+							<p class="mt-1 text-sm font-medium text-white/75">
+								{formatHourFR(artiste.date_de_presentation)}
+							</p>
+
 							<h3 class="mt-3 text-2xl text-white">
 								{artiste.nom}
 							</h3>
-
-							<p class="mt-3 text-white/75">
-								{artiste.description}
-							</p>
 						</article>
 					))
 				}
@@ -120,38 +134,15 @@ function getGenreLabel(genre: string | string[]) {
 				class="col-span-4 mt-10 grid grid-cols-2 gap-5 lg:col-span-10 lg:col-start-2 lg:grid-cols-4"
 			>
 				{
-					artistesAccueil.map((artiste, index) => (
-						<article class="text-center">
-							<a href="/Artistes" class="block no-underline">
-								<div
-									class:list={[
-										"aspect-square rounded-3xl shadow-lg transition duration-300 hover:-translate-y-1",
-										index === 0 &&
-											"bg-linear-to-br from-fuchsia-400 to-pink-500",
-										index === 1 &&
-											"bg-linear-to-br from-blue-400 to-violet-500",
-										index === 2 &&
-											"bg-linear-to-br from-emerald-400 to-blue-500",
-										index === 3 &&
-											"bg-linear-to-br from-amber-400 to-red-500",
-									]}
-								/>
-
-								<h3 class="mt-4 text-xl text-text">
-									{artiste.nom}
-								</h3>
-								<p class="mt-1 text-text-muted">
-									{getGenreLabel(artiste.genre_musical)}
-								</p>
-							</a>
-						</article>
+					artistesAccueil.map((artiste) => (
+						<CardArtisteAccueil artiste={artiste} />
 					))
 				}
 			</div>
 
 			<div class="col-span-4 mt-10 flex justify-center">
 				<Button
-					href="/Artistes"
+					href="/artistes"
 					text="Voir tous les artistes"
 					variant="outline"
 				/>
@@ -239,13 +230,45 @@ function getGenreLabel(genre: string | string[]) {
 			<div
 				class="col-span-4 mt-10 grid grid-cols-2 gap-4 lg:col-span-10 lg:col-start-2 lg:grid-cols-4"
 			>
-				{
-					partenaires.map((partenaire) => (
-						<div class="rounded-2xl border border-blue-300/30 bg-white p-6 text-left text-xl font-semibold text-text shadow-sm transition duration-300 hover:-translate-y-1 hover:border-coral-400">
-							{partenaire}
-						</div>
-					))
-				}
+				<div
+					class="overflow-hidden rounded-2xl border border-blue-300/30 bg-white p-4 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-coral-400"
+				>
+					<img
+						src={partenaire1.src}
+						alt="Partenaire 1"
+						class="h-24 w-full object-contain"
+					/>
+				</div>
+
+				<div
+					class="overflow-hidden rounded-2xl border border-blue-300/30 bg-white p-4 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-coral-400"
+				>
+					<img
+						src={partenaire2.src}
+						alt="Partenaire 2"
+						class="h-24 w-full object-contain"
+					/>
+				</div>
+
+				<div
+					class="overflow-hidden rounded-2xl border border-blue-300/30 bg-white p-4 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-coral-400"
+				>
+					<img
+						src={partenaire3.src}
+						alt="Partenaire 3"
+						class="h-24 w-full object-contain"
+					/>
+				</div>
+
+				<div
+					class="overflow-hidden rounded-2xl border border-blue-300/30 bg-white p-4 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-coral-400"
+				>
+					<img
+						src={partenaire4.src}
+						alt="Partenaire 4"
+						class="h-24 w-full object-contain"
+					/>
+				</div>
 			</div>
 		</div>
 	</section>

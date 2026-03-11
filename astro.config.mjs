@@ -16,4 +16,19 @@ export default defineConfig({
   adapter: netlify({
     imageCDN: false,
   }),
+
+  image: {
+    remotePatterns: [
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "8090"
+      },
+      {
+        protocol: "http",
+        hostname: "0.0.0.0",
+        port: "8090"
+      }
+    ]
+  }
 });
