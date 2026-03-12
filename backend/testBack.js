@@ -6,54 +6,64 @@ import {
     getSceneById,
     getArtistesBySceneId,
     getArtistesBySceneName
-} from "/backend.mjs";
+} from "./backend.mjs";
 
-async function runTests() {
+let artistes = [];
+let scenes = [];
 
-    console.log("===== TEST BACKEND =====");
-
-    try {
-
-        const artistesDate = await getArtistesByDate();
-        console.log("Artistes triés par date :", artistesDate);
-
-        const artistesAlpha = await getArtistesAlphabetique();
-        console.log("Artistes triés alphabétiquement :", artistesAlpha);
-
-        const scenes = await getScenes();
-        console.log("Scènes :", scenes);
-
-        if (scenes.length > 0) {
-
-            const sceneId = scenes[0].id;
-            const sceneName = scenes[0].nom;
-
-            const scene = await getSceneById(sceneId);
-            console.log("Scene par ID :", scene);
-
-            const artistesScene = await getArtistesBySceneId(sceneId);
-            console.log("Artistes sur cette scène :", artistesScene);
-
-            const artistesSceneNom = await getArtistesBySceneName(sceneName);
-            console.log("Artistes par nom de scène :", artistesSceneNom);
-
-        }
-
-        if (artistesDate.length > 0) {
-
-            const artisteId = artistesDate[0].id;
-
-            const artiste = await getArtisteById(artisteId);
-            console.log("Artiste par ID :", artiste);
-
-        }
-
-    } catch (error) {
-
-        console.error("Erreur test backend :", error);
-
-    }
-
+try {
+    artistes = await getArtistesByDate();
+    console.log(artistes);
+} catch (e) {
+    console.log(e);
 }
 
-runTests();
+try {
+    const a = await getArtistesAlphabetique();
+    console.log(a);
+} catch (e) {
+    console.log(e);
+}
+
+try {
+    if (artistes.length > 0) {
+        const a = await getArtisteById(artistes[0].id);
+        console.log(a);
+    }
+} catch (e) {
+    console.log(e);
+}
+
+try {
+    scenes = await getScenes();
+    console.log(scenes);
+} catch (e) {
+    console.log(e);
+}
+
+try {
+    if (scenes.length > 0) {
+        const s = await getSceneById(scenes[0].id);
+        console.log(s);
+    }
+} catch (e) {
+    console.log(e);
+}
+
+try {
+    if (scenes.length > 0) {
+        const a = await getArtistesBySceneId(scenes[0].id);
+        console.log(a);
+    }
+} catch (e) {
+    console.log(e);
+}
+
+try {
+    if (scenes.length > 0) {
+        const a = await getArtistesBySceneName(scenes[0].nom);
+        console.log(a);
+    }
+} catch (e) {
+    console.log(e);
+}
