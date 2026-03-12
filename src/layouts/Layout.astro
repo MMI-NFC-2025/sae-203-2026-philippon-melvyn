@@ -22,7 +22,6 @@ const siteName = "Les rives du territoire";
 const titleHead =
 	Astro.url.pathname === "/" ? siteName : `${title} — ${siteName}`;
 
-// compute login state from incoming request cookies
 const pb = getPBFromRequest(Astro.request);
 const isAuthenticated = pb.authStore.isValid;
 const currentUser = isAuthenticated ? pb.authStore.model : null;

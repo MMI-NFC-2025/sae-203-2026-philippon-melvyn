@@ -101,3 +101,13 @@ export function buildFileURL(collection, recordId, fileName) {
 
     return `https://sae203.melvyn-philippon.fr/api/files/${collection}/${recordId}/${fileName}`;
 }
+
+export function getPBFromRequest(request) {
+    const instance = new PocketBase("https://sae203.melvyn-philippon.fr");
+    instance.autoCancellation(false);
+
+    const cookieHeader = request.headers.get("cookie") || "";
+    instance.authStore.loadFromCookie(cookieHeader);
+
+    return instance;
+}
