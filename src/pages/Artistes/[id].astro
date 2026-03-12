@@ -2,7 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import ImagePB from "../../components/ImagePB.astro";
 import {
-    getArtisteSceneById,
+   
     getArtisteById,
     getArtistesAlphabetique,
     buildFileURL,
@@ -12,7 +12,7 @@ const { id } = Astro.params;
 
 const artiste = await getArtisteById(id);
 const allArtistes = await getArtistesAlphabetique();
-const artisteWithScene = await getArtisteSceneById(id);
+
 
 if (!artiste) {
     return Astro.redirect("/artistes");
@@ -53,7 +53,7 @@ const genres = Array.isArray(artiste.genre_musical)
       ? [artiste.genre_musical]
       : [];
 
-const sceneName = artisteWithScene.expand?.scene?.nom || "Scène non renseignée";
+const sceneName = artiste.expand?.scene?.nom || "Scène non renseignée";
 
 const similarArtistes = allArtistes
     .filter((item) => item.id !== artiste.id)

@@ -1,42 +1,26 @@
 import PocketBase from "pocketbase";
 
 export const pb = new PocketBase("https://sae203.melvyn-philippon.fr");
+
 pb.autoCancellation(false);
-
-/**
- * Return a PocketBase instance whose auth store is initialized from the
- * cookies of an incoming Astro request.  This lets SSR handlers know if
- * the user is already logged in and keeps the token server-side.
- *
- * @param {import("astro").AstroRequest} request
- * @returns {import("pocketbase").PocketBase}
- */
-export function getPBFromRequest(request) {
-    const instance = new PocketBase("https://sae203.melvyn-philippon.fr");
-    instance.autoCancellation(false);
-
-    const cookieHeader = request.headers.get("cookie") || "";
-    instance.authStore.loadFromCookie(cookieHeader);
-    return instance;
-}
 
 export async function getArtistesByDate() {
     return await pb.collection("Artiste").getFullList({
         sort: "date_de_presentation",
-        expand: "production"
+        expand: "scene"
     });
 }
 
 export async function getArtistesAlphabetique() {
     return await pb.collection("Artiste").getFullList({
         sort: "nom",
-        expand: "production"
+        expand: "scene"
     });
 }
 
 export async function getArtisteById(id) {
     return await pb.collection("Artiste").getOne(id, {
-        expand: "production"
+        expand: "scene"
     });
 }
 
@@ -60,13 +44,11 @@ export async function getArtistesBySceneId(sceneId) {
 
 export async function getArtistesBySceneName(sceneName) {
 
-    const scene = await pb.collection("Scene").getFirstListItem(`nom="${sceneName}"`);
+    const scene = await pb.collection("Scene").getFirstListItem(
+        `nom="${sceneName}"`
+    );
 
-    return await pb.collection("Artiste").getFullList({
-        filter: `production="${scene.id}"`,
-        sort: "date_de_presentation",
-        expand: "production"
-    });
+    return await getArtistesBySceneId(scene.id);
 }
 
 export async function saveArtiste(data) {
@@ -87,47 +69,35 @@ export async function saveScene(data) {
     return await pb.collection("Scene").create(data);
 }
 
-// helper for creating new user records from server-side code
-export async function addNewUser(newUser) {
-    // expects object with email, password, passwordConfirm, name (optional)
-    if (!newUser || !newUser.email || !newUser.password || !newUser.passwordConfirm) {
-        throw new Error("Missing required user fields");
-    }
+export async function addNewUser(user) {
 
-    const record = await pb.collection("users").create({
-        email: newUser.email,
-        password: newUser.password,
-        passwordConfirm: newUser.passwordConfirm,
-        name: newUser.name || "",
+    return await pb.collection("users").create({
+        email: user.email,
+        password: user.password,
+        passwordConfirm: user.passwordConfirm,
+        name: user.name || ""
     });
-
-    return record;
 }
 
-export const PB_BASE_URL = "https://sae203.melvyn-philippon.fr";
+export async function userAuth(email, password) {
+    return await pb.collection("users").authWithPassword(email, password);
+}
 
-/**
- * Build a PocketBase file URL for a given collection/record.
- * This avoids importing the `pb` object inside components.
- * @param {string} collection - name of the collection (e.g. "Artiste")
- * @param {string} recordId - ID of the record
- * @param {string} fileName - filename stored in the record
- * @param {string} [thumb] - optional thumbnail spec
- * @returns {string|null}
- */
-export function buildFileURL(collection, recordId, fileName, thumb) {
+export function logout() {
+    pb.authStore.clear();
+}
+
+export function isLoggedIn() {
+    return pb.authStore.isValid;
+}
+
+export function getCurrentUser() {
+    return pb.authStore.record;
+}
+
+export function buildFileURL(collection, recordId, fileName) {
+
     if (!collection || !recordId || !fileName) return null;
-    let url = `${PB_BASE_URL}/api/files/${collection}/${recordId}/${fileName}`;
-    if (thumb) url += `?thumb=${thumb}`;
-    return url;
-}
 
-export async function Userauth(login, mdp) {
-    return await pb.collection("users").authWithPassword(login, mdp);
-}
-
-export async function getArtisteSceneById(id) {
-    return await pb.collection("Artiste").getOne(id, {
-        expand: "scene"
-    });
+    return `https://sae203.melvyn-philippon.fr/api/files/${collection}/${recordId}/${fileName}`;
 }
